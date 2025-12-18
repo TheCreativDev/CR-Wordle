@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CR Wordle - Card Dashboard</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <a href="index.html" class="back-link">← Back to Game</a>
+            </div>
+            <div class="header-center">
+                <h1>Card Dashboard</h1>
+                <p class="subtitle">Browse &amp; Inspect All Cards</p>
+            </div>
+            <div class="header-right">
+                <span id="card-count" class="card-count">0 cards</span>
+            </div>
+        </header>
+
+        <!-- View Toggle & Filter Toggle -->
+        <section class="controls-bar">
+            <div class="view-toggle">
+                <button id="grid-view-btn" class="view-btn active" title="Grid View">
+                    <span class="icon">▦</span> Grid
+                </button>
+                <button id="list-view-btn" class="view-btn" title="List View">
+                    <span class="icon">☰</span> List
+                </button>
+            </div>
+            <button id="filter-toggle-btn" class="filter-toggle-btn">
+                <span class="icon">⚙</span> Filters
+                <span id="active-filter-count" class="filter-badge hidden">0</span>
+            </button>
+        </section>
+
+        <!-- Collapsible Filter Panel -->
+        <section id="filter-panel" class="filter-panel hidden">
+            <div class="filter-panel-content">
+                <!-- Row 1: Search & Quick Actions -->
+                <div class="filter-row">
+                    <div class="filter-group filter-group-wide">
+                        <label for="filter-name">Search by Name</label>
+                        <input type="text" id="filter-name" class="filter-input" placeholder="Type card name...">
+                    </div>
+                    <div class="filter-group filter-actions">
+                        <button id="clear-filters-btn" class="filter-action-btn">Clear All Filters</button>
+                    </div>
+                </div>
+
+                <!-- Row 2: Numeric Filters -->
+                <div class="filter-row">
+                    <!-- Elixir -->
+                    <div class="filter-group">
+                        <label>Elixir</label>
+                        <div class="filter-numeric">
+                            <select id="filter-elixir-op" class="filter-select">
+                                <option value="">Any</option>
+                                <option value="eq">=</option>
+                                <option value="lt">&lt;</option>
+                                <option value="gt">&gt;</option>
+                                <option value="lte">≤</option>
+                                <option value="gte">≥</option>
+                            </select>
+                            <input type="number" id="filter-elixir-val" class="filter-input-small" min="1" max="10" placeholder="#">
+                        </div>
+                    </div>
+
+                    <!-- Hit Speed -->
+                    <div class="filter-group">
+                        <label>Hit Speed</label>
+                        <div class="filter-numeric">
+                            <select id="filter-hitspeed-op" class="filter-select">
+                                <option value="">Any</option>
+                                <option value="eq">=</option>
+                                <option value="lt">&lt;</option>
+                                <option value="gt">&gt;</option>
+                                <option value="lte">≤</option>
+                                <option value="gte">≥</option>
+                                <option value="na">N/A</option>
+                            </select>
+                            <input type="number" id="filter-hitspeed-val" class="filter-input-small" step="0.1" min="0" placeholder="#">
+                        </div>
+                    </div>
+
+                    <!-- Release Year -->
+                    <div class="filter-group">
+                        <label>Release Year</label>
+                        <div class="filter-numeric">
+                            <select id="filter-year-op" class="filter-select">
+                                <option value="">Any</option>
+                                <option value="eq">=</option>
+                                <option value="lt">&lt;</option>
+                                <option value="gt">&gt;</option>
+                                <option value="lte">≤</option>
+                                <option value="gte">≥</option>
+                            </select>
+                            <input type="number" id="filter-year-val" class="filter-input-small" min="2016" max="2025" placeholder="#">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 3: Enum Filters (Multi-select) -->
+                <div class="filter-row">
+                    <!-- Rarity -->
+                    <div class="filter-group">
+                        <label>Rarity</label>
+                        <div class="filter-multiselect">
+                            <div class="multiselect-buttons">
+                                <button type="button" class="select-all-btn" data-target="rarity">All</button>
+                                <button type="button" class="select-none-btn" data-target="rarity">None</button>
+                            </div>
+                            <div class="checkbox-group" id="filter-rarity">
+                                <label><input type="checkbox" value="Common" checked> Common</label>
+                                <label><input type="checkbox" value="Rare" checked> Rare</label>
+                                <label><input type="checkbox" value="Epic" checked> Epic</label>
+                                <label><input type="checkbox" value="Legendary" checked> Legendary</label>
+                                <label><input type="checkbox" value="Champion" checked> Champion</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Type -->
+                    <div class="filter-group">
+                        <label>Type</label>
+                        <div class="filter-multiselect">
+                            <div class="multiselect-buttons">
+                                <button type="button" class="select-all-btn" data-target="type">All</button>
+                                <button type="button" class="select-none-btn" data-target="type">None</button>
+                            </div>
+                            <div class="checkbox-group" id="filter-type">
+                                <label><input type="checkbox" value="Troop" checked> Troop</label>
+                                <label><input type="checkbox" value="Spell" checked> Spell</label>
+                                <label><input type="checkbox" value="Building" checked> Building</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Range -->
+                    <div class="filter-group">
+                        <label>Range</label>
+                        <div class="filter-multiselect">
+                            <div class="multiselect-buttons">
+                                <button type="button" class="select-all-btn" data-target="range">All</button>
+                                <button type="button" class="select-none-btn" data-target="range">None</button>
+                            </div>
+                            <div class="checkbox-group" id="filter-range">
+                                <label><input type="checkbox" value="Melee" checked> Melee</label>
+                                <label><input type="checkbox" value="Ranged" checked> Ranged</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Speed -->
+                    <div class="filter-group">
+                        <label>Speed</label>
+                        <div class="filter-multiselect">
+                            <div class="multiselect-buttons">
+                                <button type="button" class="select-all-btn" data-target="speed">All</button>
+                                <button type="button" class="select-none-btn" data-target="speed">None</button>
+                            </div>
+                            <div class="checkbox-group" id="filter-speed">
+                                <label><input type="checkbox" value="Slow" checked> Slow</label>
+                                <label><input type="checkbox" value="Medium" checked> Medium</label>
+                                <label><input type="checkbox" value="Fast" checked> Fast</label>
+                                <label><input type="checkbox" value="Very Fast" checked> Very Fast</label>
+                                <label><input type="checkbox" value="N/A" checked> N/A</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cards Container -->
+        <section id="cards-container" class="cards-container grid-view">
+            <!-- Cards will be rendered here -->
+        </section>
+
+        <!-- No Results Message -->
+        <div id="no-results" class="no-results hidden">
+            <p>No cards match the current filters.</p>
+            <button id="no-results-clear-btn" class="filter-action-btn">Clear All Filters</button>
+        </div>
+
+        <!-- Card Detail Modal -->
+        <div id="card-modal" class="modal hidden">
+            <div class="modal-overlay"></div>
+            <div class="modal-content">
+                <button id="modal-close-btn" class="modal-close-btn">&times;</button>
+                
+                <!-- Navigation -->
+                <button id="modal-prev-btn" class="modal-nav-btn modal-prev" title="Previous Card">‹</button>
+                <button id="modal-next-btn" class="modal-nav-btn modal-next" title="Next Card">›</button>
+
+                <!-- Card Details -->
+                <div class="card-detail">
+                    <div class="card-detail-header">
+                        <div class="card-detail-image-container">
+                            <img id="modal-card-image" src="" alt="Card Image">
+                            <span id="modal-missing-indicator" class="missing-indicator hidden">Missing Image</span>
+                        </div>
+                        <h2 id="modal-card-name">Card Name</h2>
+                    </div>
+                    
+                    <div class="card-detail-attributes">
+                        <div class="attribute-row">
+                            <span class="attr-label">Elixir</span>
+                            <span id="modal-elixir" class="attr-value">-</span>
+                        </div>
+                        <div class="attribute-row">
+                            <span class="attr-label">Rarity</span>
+                            <span id="modal-rarity" class="attr-value">-</span>
+                        </div>
+                        <div class="attribute-row">
+                            <span class="attr-label">Type</span>
+                            <span id="modal-type" class="attr-value">-</span>
+                        </div>
+                        <div class="attribute-row">
+                            <span class="attr-label">Range</span>
+                            <span id="modal-range" class="attr-value">-</span>
+                        </div>
+                        <div class="attribute-row">
+                            <span class="attr-label">Speed</span>
+                            <span id="modal-speed" class="attr-value">-</span>
+                        </div>
+                        <div class="attribute-row">
+                            <span class="attr-label">Hit Speed</span>
+                            <span id="modal-hitspeed" class="attr-value">-</span>
+                        </div>
+                        <div class="attribute-row">
+                            <span class="attr-label">Release Year</span>
+                            <span id="modal-year" class="attr-value">-</span>
+                        </div>
+                    </div>
+
+                    <div class="card-detail-footer">
+                        <span id="modal-card-index" class="card-index">1 of 100</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="data/cards.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
