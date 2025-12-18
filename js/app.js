@@ -34,6 +34,11 @@ const App = (function() {
     function startNewGame() {
         Game.startNewGame();
         UI.resetUI();
+        
+        // Log game start to Firebase
+        if (typeof FirebaseAnalytics !== 'undefined') {
+            FirebaseAnalytics.logGameStart();
+        }
     }
 
     // Initialize when DOM is ready

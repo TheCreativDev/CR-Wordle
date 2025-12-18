@@ -328,9 +328,20 @@ const UI = (function() {
      */
     function handleWin() {
         const guessCount = Game.getGuessCount();
+        const gameState = Game.getGameState();
         
         // Update stats
         Stats.recordWin(guessCount);
+        
+        // Log to Firebase
+        if (typeof FirebaseAnalytics !== 'undefined') {
+            FirebaseAnalytics.logGame({
+                won: true,
+                guesses: guessCount,
+                targetCard: gameState.targetCard.name,
+                guessedCards: gameState.guessedCards.map(c => c.name)
+            });
+        }
         
         // Show win message
         guessCountSpan.textContent = guessCount;
@@ -345,9 +356,20 @@ const UI = (function() {
      */
     function handleLoss() {
         const targetCard = Game.getTargetCard();
+        const gameState = Game.getGameState();
         
         // Update stats
         Stats.recordLoss();
+        
+        // Log to Firebase
+        if (typeof FirebaseAnalytics !== 'undefined') {
+            FirebaseAnalytics.logGame({
+                won: false,
+                guesses: gameState.guessCount,
+                targetCard: targetCard.name,
+                guessedCards: gameState.guessedCards.map(c => c.name)
+            });
+        }
         
         // Show loss message with target card
         document.getElementById('target-card-image').src = targetCard.image;

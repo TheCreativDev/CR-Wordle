@@ -946,3 +946,103 @@ body {
     display: none;
 }
 
+/* ===== Game Statistics Section ===== */
+.stats-section {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    border: 2px solid var(--border-color);
+}
+
+.stats-heading {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: var(--accent-blue);
+    text-align: center;
+}
+
+.stats-subheading {
+    font-size: 1.4rem;
+    margin: 25px 0 15px 0;
+    color: var(--text-primary);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-blue);
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--accent-blue);
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.top-cards-list {
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    padding: 15px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.top-card-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+    transition: background 0.2s;
+}
+
+.top-card-item:last-child {
+    border-bottom: none;
+}
+
+.top-card-item:hover {
+    background: var(--bg-card);
+}
+
+.top-card-name {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.top-card-count {
+    font-size: 1rem;
+    color: var(--accent-blue);
+    font-weight: bold;
+}
+
+.loading-text {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 20px;
+    font-style: italic;
+}

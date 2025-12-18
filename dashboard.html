@@ -42,6 +42,42 @@
                 </div>
             </header>
 
+        <!-- Game Statistics Section -->
+        <section class="stats-section" id="game-stats-section">
+            <h2 class="stats-heading">📊 Game Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="total-games">-</div>
+                    <div class="stat-label">Total Games</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="games-won">-</div>
+                    <div class="stat-label">Games Won</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="games-lost">-</div>
+                    <div class="stat-label">Games Lost</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="win-rate">-</div>
+                    <div class="stat-label">Win Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avg-guesses">-</div>
+                    <div class="stat-label">Avg Guesses (Wins)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="games-started">-</div>
+                    <div class="stat-label">Games Started</div>
+                </div>
+            </div>
+            
+            <h3 class="stats-subheading">🎯 Most Targeted Cards</h3>
+            <div class="top-cards-list" id="top-cards-list">
+                <p class="loading-text">Loading stats...</p>
+            </div>
+        </section>
+
         <!-- View Toggle & Filter Toggle -->
         <section class="controls-bar">
             <div class="view-toggle">
@@ -340,5 +376,11 @@
         // Check auth on page load
         checkAuth();
     </script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/dashboard-stats.js"></script>
 </body>
 </html>
