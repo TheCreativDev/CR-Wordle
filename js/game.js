@@ -5,9 +5,11 @@
 
 const Game = (function() {
     // Private variables
+    const MAX_GUESSES = 10;
     let targetCard = null;
     let guessedCards = [];
     let isGameWon = false;
+    let isGameLost = false;
 
     /**
      * Initialize a new game with a random target card
@@ -16,6 +18,7 @@ const Game = (function() {
         targetCard = getRandomCard();
         guessedCards = [];
         isGameWon = false;
+        isGameLost = false;
         console.log("New game started! Target:", targetCard.name); // Debug - remove in production
         return true;
     }
@@ -59,6 +62,11 @@ const Game = (function() {
             return null;
         }
 
+        if (isGameLost) {
+            console.warn("Game already lost");
+            return null;
+        }
+
         // Add to guessed cards
         guessedCards.push(guessedCard);
 
@@ -69,6 +77,11 @@ const Game = (function() {
         if (guessedCard.id === targetCard.id) {
             isGameWon = true;
             comparison.isWin = true;
+        }
+        // Check for loss (max guesses reached and didn't win)
+        else if (guessedCards.length >= MAX_GUESSES) {
+            isGameLost = true;
+            comparison.isLoss = true;
         }
 
         return comparison;
@@ -156,7 +169,7 @@ const Game = (function() {
                 value: guessed,
                 isCorrect: false,
                 direction: null,
-                isNA: true  // Grey cell, can't compare
+                isNA: false  // Grey cell, can't compare
             };
         }
 
@@ -301,6 +314,8 @@ const Game = (function() {
         getGameState,
         getGuessCount,
         hasWon,
+        hasLost: () => isGameLost,
+        getTargetCard: () => targetCard,
         getAvailableCards,
         searchCards,
         isCardGuessed

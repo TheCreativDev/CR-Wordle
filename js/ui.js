@@ -9,8 +9,10 @@ const UI = (function() {
     let autocompleteList;
     let guessesContainer;
     let winMessage;
+    let lossMessage;
     let guessCountSpan;
     let playAgainBtn;
+    let lossPlayAgainBtn;
     let statsBtn;
     let statsModal;
     let closeModalBtn;
@@ -29,8 +31,10 @@ const UI = (function() {
         autocompleteList = document.getElementById('autocomplete-list');
         guessesContainer = document.getElementById('guesses-container');
         winMessage = document.getElementById('win-message');
+        lossMessage = document.getElementById('loss-message');
         guessCountSpan = document.getElementById('guess-count');
         playAgainBtn = document.getElementById('play-again-btn');
+        lossPlayAgainBtn = document.getElementById('loss-play-again-btn');
         statsBtn = document.getElementById('stats-btn');
         statsModal = document.getElementById('stats-modal');
         closeModalBtn = document.getElementById('close-modal');
@@ -79,6 +83,13 @@ const UI = (function() {
                 App.startNewGame();
             }
         });
+
+        // Loss play again button
+        lossPlayAgainBtn.addEventListener('click', () => {
+            if (typeof App !== 'undefined' && App.startNewGame) {
+                App.startNewGame();
+            }
+        });
     }
 
     /**
@@ -86,6 +97,12 @@ const UI = (function() {
      */
     function handleSearchInput(e) {
         const query = e.target.value;
+        
+        // Don't show autocomplete if game is over
+        if (Game.hasWon() || Game.hasLost()) {
+            hideAutocomplete();
+            return;
+        }
         
         if (query.length < 1) {
             hideAutocomplete();
@@ -129,6 +146,11 @@ const UI = (function() {
             
             case 'Enter':
                 e.preventDefault();
+                // Don't allow selection if game is over
+                if (Game.hasWon() || Game.hasLost()) {
+                    hideAutocomplete();
+                    break;
+                }
                 if (selectedIndex >= 0 && selectedIndex < currentResults.length) {
                     // User has navigated with arrow keys - select that card
                     selectCard(currentResults[selectedIndex]);
@@ -187,6 +209,12 @@ const UI = (function() {
      * Select a card from autocomplete
      */
     function selectCard(card) {
+        // Don't allow selection if game is over
+        if (Game.hasWon() || Game.hasLost()) {
+            hideAutocomplete();
+            return;
+        }
+
         hideAutocomplete();
         searchInput.value = '';
 
@@ -198,6 +226,10 @@ const UI = (function() {
 
             if (result.isWin) {
                 handleWin();
+            }
+            // Check for loss
+            else if (result.isLoss) {
+                handleLoss();
             }
         }
     }
@@ -309,11 +341,34 @@ const UI = (function() {
     }
 
     /**
+     * Handle game loss
+     */
+    function handleLoss() {
+        const targetCard = Game.getTargetCard();
+        
+        // Update stats
+        Stats.recordLoss();
+        
+        // Show loss message with target card
+        document.getElementById('target-card-image').src = targetCard.image;
+        document.getElementById('target-card-name').textContent = targetCard.name;
+        lossMessage.classList.remove('hidden');
+        
+        // Add red tint to search input
+        searchInput.classList.add('game-lost');
+        
+        // Disable search
+        searchInput.disabled = true;
+    }
+
+    /**
      * Reset UI for new game
      */
     function resetUI() {
         guessesContainer.innerHTML = '';
         winMessage.classList.add('hidden');
+        lossMessage.classList.add('hidden');
+        searchInput.classList.remove('game-lost');
         searchInput.value = '';
         searchInput.disabled = false;
         searchInput.focus();

@@ -29,6 +29,17 @@
             </div>
         </section>
 
+        <!-- Loss Message -->
+        <div id="loss-message" class="loss-message hidden">
+            <h2>😞 Game Over!</h2>
+            <p>You've used all 10 guesses. The correct card was:</p>
+            <div class="target-card-reveal">
+                <img id="target-card-image" src="" alt="Target Card">
+                <p class="target-card-name" id="target-card-name"></p>
+            </div>
+            <button id="loss-play-again-btn" class="play-again-btn loss-play-again-btn">Play Again</button>
+        </div>
+
         <!-- Attribute Headers -->
         <section class="attributes-header">
             <div class="attribute-label">Card</div>

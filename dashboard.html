@@ -7,20 +7,40 @@
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-left">
-                <a href="index.html" class="back-link">← Back to Game</a>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <h1 class="login-title">CR Wordle Admin</h1>
+                <p class="login-subtitle">Enter password to access dashboard</p>
             </div>
-            <div class="header-center">
-                <h1>Card Dashboard</h1>
-                <p class="subtitle">Browse &amp; Inspect All Cards</p>
-            </div>
-            <div class="header-right">
-                <span id="card-count" class="card-count">0 cards</span>
-            </div>
-        </header>
+            <form id="login-form" class="login-form">
+                <div class="login-input-group">
+                    <input type="password" id="password-input" class="login-input" placeholder="Password" autofocus>
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+                <div id="login-error" class="login-error hidden"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Dashboard (Hidden until logged in) -->
+    <div id="dashboard-content" class="dashboard-content hidden">
+        <div class="container">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <a href="index.html" class="back-link">← Back to Game</a>
+                </div>
+                <div class="header-center">
+                    <h1>Card Dashboard</h1>
+                    <p class="subtitle">Browse &amp; Inspect All Cards</p>
+                </div>
+                <div class="header-right">
+                    <button id="logout-btn" class="logout-btn">Logout</button>
+                    <span id="card-count" class="card-count">0 cards</span>
+                </div>
+            </header>
 
         <!-- View Toggle & Filter Toggle -->
         <section class="controls-bar">
@@ -244,9 +264,81 @@
             </div>
         </div>
     </div>
+    </div><!-- End dashboard-content -->
 
     <!-- Scripts -->
     <script src="data/cards.js"></script>
     <script src="js/dashboard.js"></script>
+    <script>
+        // Password authentication
+        // SHA-256 hash of "gurke": 
+        const VALID_PASSWORD_HASH = '0869a908426ef0462e864c8cd0fa9bf2e81a51e3b65c26ed2137b165fa325056';
+        
+        // Generate SHA-256 hash
+        async function hashPassword(password) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
+        
+        // Check if already logged in (session only)
+        function checkAuth() {
+            const isLoggedIn = sessionStorage.getItem('crw_admin_auth') === 'true';
+            if (isLoggedIn) {
+                showDashboard();
+            }
+        }
+        
+        function showDashboard() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('dashboard-content').classList.remove('hidden');
+        }
+        
+        function showLogin() {
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('dashboard-content').classList.add('hidden');
+            sessionStorage.removeItem('crw_admin_auth');
+        }
+        
+        // Login form handler
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const passwordInput = document.getElementById('password-input');
+            const errorDiv = document.getElementById('login-error');
+            const loginContainer = document.querySelector('.login-container');
+            
+            const enteredPassword = passwordInput.value;
+            const enteredHash = await hashPassword(enteredPassword);
+            
+            if (enteredHash === VALID_PASSWORD_HASH) {
+                // Correct password
+                sessionStorage.setItem('crw_admin_auth', 'true');
+                showDashboard();
+                passwordInput.value = '';
+                errorDiv.classList.add('hidden');
+            } else {
+                // Wrong password
+                errorDiv.textContent = 'Wrong password';
+                errorDiv.classList.remove('hidden');
+                loginContainer.classList.add('shake');
+                passwordInput.value = '';
+                
+                setTimeout(() => {
+                    loginContainer.classList.remove('shake');
+                }, 500);
+            }
+        });
+        
+        // Logout button handler
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            showLogin();
+        });
+        
+        // Check auth on page load
+        checkAuth();
+    </script>
 </body>
 </html>
