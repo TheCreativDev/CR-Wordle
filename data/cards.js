@@ -8,7 +8,7 @@
  *   elixir: number,      // Elixir cost (1-10)
  *   rarity: string,      // "Common" | "Rare" | "Epic" | "Legendary" | "Champion"
  *   type: string,        // "Troop" | "Spell" | "Building"
- *   target: string,      // "Ground" | "Air & Ground" | "k.A."
+ *   target: string,      // "Ground" | "Air & Ground" | "N/A"
  *   range: string,       // "Melee" | "Ranged"
  *   speed: string,       // "Slow" | "Medium" | "Fast" | "Very Fast" | "N/A" (for buildings)
  *   hitSpeed: number|string, // Hit speed in seconds, or "N/A" for spells
@@ -51,7 +51,7 @@ const CARDS = [
         "type": "Building",
         "target": "Ground",
         "range": "Ranged",
-        "speed": "k.A.",
+        "speed": "N/A",
         "hitSpeed": 1.0,
         "releaseYear": 2016,
         "image": "images/cards/cannon.png"
@@ -63,8 +63,8 @@ const CARDS = [
         "rarity": "Common",
         "type": "Building",
         "target": "Ground",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 5.0,
         "releaseYear": 2016,
         "image": "images/cards/mortar.png"
@@ -77,7 +77,7 @@ const CARDS = [
         "type": "Building",
         "target": "Air & Ground",
         "range": "Ranged",
-        "speed": "k.A.",
+        "speed": "N/A",
         "hitSpeed": 1.1,
         "releaseYear": 2016,
         "image": "images/cards/tesla.png"
@@ -88,9 +88,9 @@ const CARDS = [
         "elixir": 4,
         "rarity": "Rare",
         "type": "Building",
-        "target": "k.A.",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "target": "N/A",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2019,
         "image": "images/cards/goblin_cage.png"
@@ -101,9 +101,9 @@ const CARDS = [
         "elixir": 4,
         "rarity": "Rare",
         "type": "Building",
-        "target": "k.A.",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "target": "N/A",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2016,
         "image": "images/cards/goblin_hut.png"
@@ -114,9 +114,9 @@ const CARDS = [
         "elixir": 3,
         "rarity": "Rare",
         "type": "Building",
-        "target": "k.A.",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "target": "N/A",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2016,
         "image": "images/cards/tombstone.png"
@@ -129,7 +129,7 @@ const CARDS = [
         "type": "Building",
         "target": "Ground",
         "range": "Ranged",
-        "speed": "k.A.",
+        "speed": "N/A",
         "hitSpeed": 1.8,
         "releaseYear": 2016,
         "image": "images/cards/bomb_tower.png"
@@ -142,7 +142,7 @@ const CARDS = [
         "type": "Building",
         "target": "Air & Ground",
         "range": "Ranged",
-        "speed": "k.A.",
+        "speed": "N/A",
         "hitSpeed": 0.4,
         "releaseYear": 2016,
         "image": "images/cards/inferno_tower.png"
@@ -153,9 +153,9 @@ const CARDS = [
         "elixir": 6,
         "rarity": "Rare",
         "type": "Building",
-        "target": "k.A.",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "target": "N/A",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2016,
         "image": "images/cards/barbarian_hut.png"
@@ -166,9 +166,9 @@ const CARDS = [
         "elixir": 6,
         "rarity": "Rare",
         "type": "Building",
-        "target": "k.A.",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "target": "N/A",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2016,
         "image": "images/cards/elixir_collector.png"
@@ -181,7 +181,7 @@ const CARDS = [
         "type": "Building",
         "target": "Ground",
         "range": "Ranged",
-        "speed": "k.A.",
+        "speed": "N/A",
         "hitSpeed": 0.3,
         "releaseYear": 2016,
         "image": "images/cards/x-bow.png"
@@ -192,9 +192,9 @@ const CARDS = [
         "elixir": 4,
         "rarity": "Epic",
         "type": "Building",
-        "target": "k.A.",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "target": "N/A",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2021,
         "image": "images/cards/goblin_drill.png"
@@ -206,8 +206,8 @@ const CARDS = [
         "rarity": "Common",
         "type": "Spell",
         "target": "Air & Ground",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2016,
         "image": "images/cards/arrows.png"
@@ -219,8 +219,8 @@ const CARDS = [
         "rarity": "Common",
         "type": "Spell",
         "target": "Air & Ground",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2016,
         "image": "images/cards/zap.png"
@@ -232,8 +232,8 @@ const CARDS = [
         "rarity": "Common",
         "type": "Spell",
         "target": "Air & Ground",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2018,
         "image": "images/cards/giant_snowball.png"
@@ -245,8 +245,8 @@ const CARDS = [
         "rarity": "Common",
         "type": "Spell",
         "target": "Air & Ground",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2020,
         "image": "images/cards/royal_delivery.png"
@@ -258,8 +258,8 @@ const CARDS = [
         "rarity": "Rare",
         "type": "Spell",
         "target": "Air & Ground",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2016,
         "image": "images/cards/fireball.png"
@@ -271,8 +271,8 @@ const CARDS = [
         "rarity": "Rare",
         "type": "Spell",
         "target": "Air & Ground",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2016,
         "image": "images/cards/rocket.png"
@@ -284,8 +284,8 @@ const CARDS = [
         "rarity": "Rare",
         "type": "Spell",
         "target": "Ground",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2019,
         "image": "images/cards/earthquake.png"
@@ -296,9 +296,9 @@ const CARDS = [
         "elixir": 3,
         "rarity": "Epic",
         "type": "Spell",
-        "target": "k.A.",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "target": "N/A",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2016,
         "image": "images/cards/goblin_barrel.png"
@@ -310,8 +310,8 @@ const CARDS = [
         "rarity": "Epic",
         "type": "Spell",
         "target": "Air & Ground",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2025,
         "image": "images/cards/vines.png"
@@ -323,8 +323,8 @@ const CARDS = [
         "rarity": "Epic",
         "type": "Spell",
         "target": "Air & Ground",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2016,
         "image": "images/cards/lightning.png"
@@ -336,8 +336,8 @@ const CARDS = [
         "rarity": "Epic",
         "type": "Spell",
         "target": "Air & Ground",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2016,
         "image": "images/cards/freeze.png"
@@ -350,7 +350,7 @@ const CARDS = [
         "type": "Spell",
         "target": "Ground",
         "range": "Ranged",
-        "speed": "k.A.",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2018,
         "image": "images/cards/barbarian_barrel.png"
@@ -362,8 +362,8 @@ const CARDS = [
         "rarity": "Epic",
         "type": "Spell",
         "target": "Air & Ground",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2016,
         "image": "images/cards/poison.png"
@@ -375,8 +375,8 @@ const CARDS = [
         "rarity": "Epic",
         "type": "Spell",
         "target": "Air & Ground",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2024,
         "image": "images/cards/goblin_curse.png"
@@ -388,8 +388,8 @@ const CARDS = [
         "rarity": "Epic",
         "type": "Spell",
         "target": "Air & Ground",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2016,
         "image": "images/cards/rage.png"
@@ -401,8 +401,8 @@ const CARDS = [
         "rarity": "Epic",
         "type": "Spell",
         "target": "Air & Ground",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2016,
         "image": "images/cards/clone.png"
@@ -414,8 +414,8 @@ const CARDS = [
         "rarity": "Epic",
         "type": "Spell",
         "target": "Air & Ground",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2016,
         "image": "images/cards/tornado.png"
@@ -426,9 +426,9 @@ const CARDS = [
         "elixir": "?",
         "rarity": "Epic",
         "type": "Spell",
-        "target": "k.A.",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "target": "N/A",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2016,
         "image": "images/cards/mirror.png"
@@ -440,8 +440,8 @@ const CARDS = [
         "rarity": "Epic",
         "type": "Spell",
         "target": "Air & Ground",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2024,
         "image": "images/cards/void.png"
@@ -454,7 +454,7 @@ const CARDS = [
         "type": "Spell",
         "target": "Ground",
         "range": "Ranged",
-        "speed": "k.A.",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2016,
         "image": "images/cards/the_log.png"
@@ -465,9 +465,9 @@ const CARDS = [
         "elixir": 5,
         "rarity": "Legendary",
         "type": "Spell",
-        "target": "k.A.",
-        "range": "k.A.",
-        "speed": "k.A.",
+        "target": "N/A",
+        "range": "N/A",
+        "speed": "N/A",
         "hitSpeed": 0,
         "releaseYear": 2016,
         "image": "images/cards/graveyard.png"
@@ -689,7 +689,7 @@ const CARDS = [
         "target": "Buildings",
         "range": "Melee",
         "speed": "Fast",
-        "hitSpeed": "k.A.",
+        "hitSpeed": "N/A",
         "releaseYear": 2017,
         "image": "images/cards/skeleton_barrel.png"
     },
@@ -760,7 +760,7 @@ const CARDS = [
     },
     {
         "id": "mini_pekka",
-        "name": "Mini P.E.K.K.A.",
+        "name": "Mini P.E.K.N/A",
         "elixir": 4,
         "rarity": "Rare",
         "type": "Troop",
@@ -1072,7 +1072,7 @@ const CARDS = [
     },
     {
         "id": "pekka",
-        "name": "P.E.K.K.A.",
+        "name": "P.E.K.N/A",
         "elixir": 7,
         "rarity": "Epic",
         "type": "Troop",
@@ -1466,8 +1466,8 @@ const CARDS = [
         "elixir": "?",
         "rarity": "Legendary",
         "type": "Troop",
-        "target": "k.A.",
-        "range": "k.A.",
+        "target": "N/A",
+        "range": "N/A",
         "speed": "Medium",
         "hitSpeed": 0,
         "releaseYear": 2025,
