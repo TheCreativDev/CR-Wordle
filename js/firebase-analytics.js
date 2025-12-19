@@ -15,8 +15,17 @@ const FirebaseAnalytics = (function() {
             return;
         }
 
+        // Wait for authentication if not ready yet
+        const user = auth.currentUser;
+        if (!user) {
+            console.log('Waiting for authentication...');
+            // Retry after a short delay
+            setTimeout(() => logGame(gameData), 500);
+            return;
+        }
+
         try {
-            const gamesRef = database.ref('games');
+            const gamesRef = database.ref('games/' + user.uid);
             const newGameRef = gamesRef.push();
             
             const gameRecord = {
@@ -67,7 +76,13 @@ const FirebaseAnalytics = (function() {
             return Promise.reject('Firebase not initialized');
         }
 
-        return database.ref('games')
+        // Make sure user is authenticated
+        const user = auth.currentUser;
+        if (!user) {
+            return Promise.reject('User not authenticated');
+        }
+
+        return database.ref('games/' + user.uid)
             .orderByChild('timestamp')
             .once('value')
             .then((snapshot) => {

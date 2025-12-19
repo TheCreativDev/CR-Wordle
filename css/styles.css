@@ -184,6 +184,28 @@ body {
     text-transform: uppercase;
 }
 
+.attribute-label.toggleable {
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+    padding: 5px;
+    border-radius: 6px;
+}
+
+.attribute-label.toggleable:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+.attribute-label.toggleable.disabled {
+    color: var(--incorrect-red);
+    font-weight: bold;
+}
+
+.attribute-label.non-toggleable {
+    cursor: default;
+}
+
 /* ===== Guesses Container ===== */
 .guesses-container {
     background: var(--bg-secondary);
@@ -266,6 +288,22 @@ body {
 .arrow {
     font-size: 1.2rem;
     margin-top: 4px;
+}
+
+/* Disabled category cells */
+.guess-cell.disabled-category {
+    background: #2a2a2a;
+    color: #555;
+    position: relative;
+    opacity: 0.6;
+}
+
+.guess-cell.disabled-category::after {
+    content: '✗';
+    position: absolute;
+    font-size: 2rem;
+    color: #666;
+    font-weight: bold;
 }
 
 /* ===== Win Message ===== */

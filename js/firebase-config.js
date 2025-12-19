@@ -21,3 +21,30 @@ firebase.initializeApp(firebaseConfig);
 
 // Get a reference to the database service
 const database = firebase.database();
+
+// Get a reference to the authentication service
+const auth = firebase.auth();
+
+// Track authentication state
+let isAuthenticated = false;
+
+// Sign in anonymously on load
+auth.signInAnonymously()
+  .then(() => {
+    console.log('Signed in anonymously');
+    isAuthenticated = true;
+  })
+  .catch((error) => {
+    console.error('Anonymous auth error:', error.code, error.message);
+  });
+
+// Listen for auth state changes
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    isAuthenticated = true;
+    console.log('User authenticated:', user.uid);
+  } else {
+    isAuthenticated = false;
+    console.log('User not authenticated');
+  }
+});

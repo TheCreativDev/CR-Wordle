@@ -59,40 +59,43 @@
     }
 
     /**
-     * Display most frequently targeted cards
+     * Display card completion grid
+     * Shows all cards with brightness based on whether they've been won as target
      */
     function displayTopCards(games) {
-        const cardCounts = {};
-        
-        // Count each target card
-        games.forEach(game => {
-            const card = game.targetCard;
-            if (card) {
-                cardCounts[card] = (cardCounts[card] || 0) + 1;
-            }
-        });
-        
-        // Sort by count
-        const sortedCards = Object.entries(cardCounts)
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 10); // Top 10
-        
         const container = document.getElementById('top-cards-list');
         
-        if (sortedCards.length === 0) {
+        if (games.length === 0) {
             container.innerHTML = '<p class="loading-text">No games recorded yet.</p>';
             return;
         }
         
-        container.innerHTML = sortedCards.map(([cardName, count], index) => `
-            <div class="top-card-item">
-                <div>
-                    <span style="color: var(--text-secondary); margin-right: 10px;">#${index + 1}</span>
-                    <span class="top-card-name">${cardName}</span>
+        // Count how many times each card was won as target
+        const cardWinCounts = {};
+        games.forEach(game => {
+            if (game.won && game.targetCard) {
+                cardWinCounts[game.targetCard] = (cardWinCounts[game.targetCard] || 0) + 1;
+            }
+        });
+        
+        // Sort cards by elixir (low to high)
+        const sortedCards = [...CARDS].sort((a, b) => a.elixir - b.elixir);
+        
+        // Generate card grid HTML
+        container.innerHTML = sortedCards.map(card => {
+            const winCount = cardWinCounts[card.name] || 0;
+            const isCompleted = winCount > 0;
+            const opacity = isCompleted ? '1' : '0.4';
+            
+            return `
+                <div class="completion-card" 
+                     style="opacity: ${opacity}" 
+                     title="${card.name}${isCompleted ? ` - Won ${winCount} time${winCount !== 1 ? 's' : ''}` : ' - Not completed yet'}">
+                    <img src="${card.image}" alt="${card.name}" class="completion-card-img">
+                    ${isCompleted ? `<div class="completion-count">${winCount}</div>` : ''}
                 </div>
-                <span class="top-card-count">${count} ${count === 1 ? 'time' : 'times'}</span>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     }
 
     /**
@@ -116,25 +119,25 @@
         setInterval(loadStats, 30000); // Refresh every 30 seconds
     }
 
-    // Initialize when dashboard content is shown
-    document.addEventListener('DOMContentLoaded', function() {
-        // Wait for dashboard to be unlocked
-        const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
+    // Wait a bit for Firebase to initialize, then load stats
+    setTimeout(function() {
+        const dashboardContent = document.getElementById('dashboard-content');
+        if (dashboardContent && !dashboardContent.classList.contains('hidden')) {
+            console.log('Dashboard visible, loading stats now...');
+            loadStats();
+            enableAutoRefresh();
+        } else {
+            console.log('Dashboard not visible yet, will check again...');
+            // Check every 500ms until dashboard is visible
+            const checkInterval = setInterval(function() {
                 const dashboardContent = document.getElementById('dashboard-content');
                 if (dashboardContent && !dashboardContent.classList.contains('hidden')) {
+                    console.log('Dashboard now visible, loading stats...');
                     loadStats();
                     enableAutoRefresh();
-                    observer.disconnect();
+                    clearInterval(checkInterval);
                 }
-            });
-        });
-
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true,
-            attributes: true,
-            attributeFilter: ['class']
-        });
-    });
+            }, 500);
+        }
+    }, 1000); // Wait 1 second for Firebase to initialize
 })();

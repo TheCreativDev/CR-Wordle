@@ -22,6 +22,11 @@ const UI = (function() {
     let selectedIndex = -1;
     let currentResults = [];
 
+    // Category toggle state (persists during session only)
+    const disabledCategories = new Set();
+    const MIN_ENABLED_CATEGORIES = 2;
+    const TOGGLEABLE_CATEGORIES = ['elixir', 'rarity', 'type', 'range', 'speed', 'hitSpeed', 'releaseYear'];
+
     /**
      * Initialize UI elements and event listeners
      */
@@ -42,6 +47,54 @@ const UI = (function() {
 
         // Set up event listeners
         setupEventListeners();
+        
+        // Set up category toggle listeners
+        setupCategoryToggles();
+    }
+
+    /**
+     * Set up category toggle event listeners
+     */
+    function setupCategoryToggles() {
+        const toggleableLabels = document.querySelectorAll('.attribute-label.toggleable');
+        
+        toggleableLabels.forEach(label => {
+            label.addEventListener('click', () => {
+                const category = label.dataset.category;
+                toggleCategory(category, label);
+            });
+        });
+    }
+
+    /**
+     * Toggle a category on/off
+     */
+    function toggleCategory(category, labelElement) {
+        // Check if we're trying to disable
+        if (!disabledCategories.has(category)) {
+            // Count currently enabled categories
+            const enabledCount = TOGGLEABLE_CATEGORIES.length - disabledCategories.size;
+            
+            // Enforce minimum enabled categories
+            if (enabledCount <= MIN_ENABLED_CATEGORIES) {
+                return; // Can't disable - would go below minimum
+            }
+            
+            // Disable the category
+            disabledCategories.add(category);
+            labelElement.classList.add('disabled');
+        } else {
+            // Enable the category
+            disabledCategories.delete(category);
+            labelElement.classList.remove('disabled');
+        }
+    }
+
+    /**
+     * Check if a category is disabled
+     */
+    function isCategoryDisabled(category) {
+        return disabledCategories.has(category);
     }
 
     /**
@@ -252,25 +305,25 @@ const UI = (function() {
             </div>
             
             <!-- Elixir -->
-            ${renderAttributeCell(attrs.elixir)}
+            ${renderAttributeCell(attrs.elixir, 'elixir')}
             
             <!-- Rarity -->
-            ${renderAttributeCell(attrs.rarity)}
+            ${renderAttributeCell(attrs.rarity, 'rarity')}
             
             <!-- Type -->
-            ${renderAttributeCell(attrs.type)}
+            ${renderAttributeCell(attrs.type, 'type')}
             
             <!-- Range -->
-            ${renderAttributeCell(attrs.range)}
+            ${renderAttributeCell(attrs.range, 'range')}
             
             <!-- Speed -->
-            ${renderAttributeCell(attrs.speed)}
+            ${renderAttributeCell(attrs.speed, 'speed')}
             
             <!-- Hit Speed -->
-            ${renderHitSpeedCell(attrs.hitSpeed)}
+            ${renderHitSpeedCell(attrs.hitSpeed, 'hitSpeed')}
             
             <!-- Release Year -->
-            ${renderAttributeCell(attrs.releaseYear)}
+            ${renderAttributeCell(attrs.releaseYear, 'releaseYear')}
         `;
 
         // Insert at top of guesses container
@@ -280,7 +333,12 @@ const UI = (function() {
     /**
      * Render a single attribute cell
      */
-    function renderAttributeCell(attr) {
+    function renderAttributeCell(attr, category = null) {
+        // Check if this category is disabled
+        if (category && isCategoryDisabled(category)) {
+            return `<div class="guess-cell disabled-category"></div>`;
+        }
+
         if (attr.isNA) {
             return `<div class="guess-cell na">N/A</div>`;
         }
@@ -299,7 +357,12 @@ const UI = (function() {
     /**
      * Render hit speed cell (handles decimal display)
      */
-    function renderHitSpeedCell(attr) {
+    function renderHitSpeedCell(attr, category = null) {
+        // Check if this category is disabled
+        if (category && isCategoryDisabled(category)) {
+            return `<div class="guess-cell disabled-category"></div>`;
+        }
+
         if (attr.isNA || attr.value === "N/A") {
             return `<div class="guess-cell na">N/A</div>`;
         }
