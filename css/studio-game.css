@@ -1,0 +1,15 @@
+/* Studio game tweaks: keep base look, remove Firebase/stats affordances */
+
+body {
+  padding: 12px;
+}
+
+.container {
+  max-width: 1000px;
+}
+
+/* Hide stats UI (studio requirement: no stats) */
+#stats-btn,
+#stats-modal {
+  display: none !important;
+}

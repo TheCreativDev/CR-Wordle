@@ -680,6 +680,9 @@ body {
 .attr-value {
     color: var(--text-primary);
     font-weight: 600;
+    white-space: nowrap;
+    overflow: visible;
+    text-align: right;
 }
 
 /* Rarity-specific colors */

@@ -519,7 +519,7 @@ const CARDS = [
         "type": "Troop",
         "target": "Air & Ground",
         "range": "Ranged",
-        "speed": "Very",
+        "speed": "Very Fast",
         "hitSpeed": 1.7,
         "releaseYear": 2016,
         "image": "images/cards/spear_goblins.png"
@@ -532,7 +532,7 @@ const CARDS = [
         "type": "Troop",
         "target": "Ground",
         "range": "Melee",
-        "speed": "Very",
+        "speed": "Very Fast",
         "hitSpeed": 1.1,
         "releaseYear": 2016,
         "image": "images/cards/goblins.png"
@@ -584,7 +584,7 @@ const CARDS = [
         "type": "Troop",
         "target": "Air & Ground",
         "range": "Ranged",
-        "speed": "Very",
+        "speed": "Very Fast",
         "hitSpeed": 0,
         "releaseYear": 2020,
         "image": "images/cards/electro_spirit.png"
@@ -610,7 +610,7 @@ const CARDS = [
         "type": "Troop",
         "target": "Air & Ground",
         "range": "Ranged",
-        "speed": "Very",
+        "speed": "Very Fast",
         "hitSpeed": 0,
         "releaseYear": 2016,
         "image": "images/cards/fire_spirit.png"
@@ -623,7 +623,7 @@ const CARDS = [
         "type": "Troop",
         "target": "Air & Ground",
         "range": "Melee",
-        "speed": "Very",
+        "speed": "Very Fast",
         "hitSpeed": 1.3,
         "releaseYear": 2017,
         "image": "images/cards/bats.png"
@@ -662,7 +662,7 @@ const CARDS = [
         "type": "Troop",
         "target": "Air & Ground",
         "range": "Ranged",
-        "speed": "Very",
+        "speed": "Very Fast",
         "hitSpeed": 0,
         "releaseYear": 2016,
         "image": "images/cards/ice_spirit.png"
@@ -701,7 +701,7 @@ const CARDS = [
         "type": "Troop",
         "target": "Ground",
         "range": "Melee",
-        "speed": "Very",
+        "speed": "Very Fast",
         "hitSpeed": 1.1,
         "releaseYear": 2017,
         "image": "images/cards/goblin_gang.png"
@@ -760,7 +760,7 @@ const CARDS = [
     },
     {
         "id": "mini_pekka",
-        "name": "Mini P.E.K.N/A",
+        "name": "Mini P.E.K.K.A",
         "elixir": 4,
         "rarity": "Rare",
         "type": "Troop",
@@ -870,7 +870,7 @@ const CARDS = [
         "type": "Troop",
         "target": "Buildings",
         "range": "Melee",
-        "speed": "Very",
+        "speed": "Very Fast",
         "hitSpeed": 1.6,
         "releaseYear": 2016,
         "image": "images/cards/hog_rider.png"
@@ -883,7 +883,7 @@ const CARDS = [
         "type": "Troop",
         "target": "Buildings",
         "range": "Melee",
-        "speed": "Very",
+        "speed": "Very Fast",
         "hitSpeed": 1.2,
         "releaseYear": 2018,
         "image": "images/cards/royal_hogs.png"
@@ -935,7 +935,7 @@ const CARDS = [
         "type": "Troop",
         "target": "Air & Ground",
         "range": "Ranged",
-        "speed": "Very",
+        "speed": "Very Fast",
         "hitSpeed": 0.8,
         "releaseYear": 2017,
         "image": "images/cards/dart_goblin.png"
@@ -987,7 +987,7 @@ const CARDS = [
         "type": "Troop",
         "target": "Air & Ground",
         "range": "Ranged",
-        "speed": "Very",
+        "speed": "Very Fast",
         "hitSpeed": 0,
         "releaseYear": 2020,
         "image": "images/cards/heal_spirit.png"
@@ -1072,7 +1072,7 @@ const CARDS = [
     },
     {
         "id": "pekka",
-        "name": "P.E.K.N/A",
+        "name": "P.E.K.K.A",
         "elixir": 7,
         "rarity": "Epic",
         "type": "Troop",
@@ -1208,7 +1208,7 @@ const CARDS = [
         "type": "Troop",
         "target": "Buildings",
         "range": "Melee",
-        "speed": "Very",
+        "speed": "Very Fast",
         "hitSpeed": 0,
         "releaseYear": 2019,
         "image": "images/cards/wall_breakers.png"
@@ -1455,7 +1455,7 @@ const CARDS = [
         "type": "Troop",
         "target": "Ground",
         "range": "Melee",
-        "speed": "Very",
+        "speed": "Very Fast",
         "hitSpeed": 0.8,
         "releaseYear": 2016,
         "image": "images/cards/lumberjack.png"

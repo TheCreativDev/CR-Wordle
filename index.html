@@ -40,6 +40,13 @@
             <button id="loss-play-again-btn" class="play-again-btn loss-play-again-btn">Play Again</button>
         </div>
 
+        <!-- Win Message -->
+        <div id="win-message" class="win-message hidden">
+            <h2>🎉 Congratulations!</h2>
+            <p>You found the card in <span id="guess-count">0</span> guesses!</p>
+            <button id="play-again-btn" class="play-again-btn">Play Again</button>
+        </div>
+
         <!-- Attribute Headers -->
         <section class="attributes-header">
             <div class="attribute-label non-toggleable">Card</div>
@@ -56,13 +63,6 @@
         <section id="guesses-container" class="guesses-container">
             <!-- Guessed cards will be rendered here -->
         </section>
-
-        <!-- Win Message -->
-        <div id="win-message" class="win-message hidden">
-            <h2>🎉 Congratulations!</h2>
-            <p>You found the card in <span id="guess-count">0</span> guesses!</p>
-            <button id="play-again-btn" class="play-again-btn">Play Again</button>
-        </div>
 
         <!-- Stats Modal -->
         <div id="stats-modal" class="modal hidden">

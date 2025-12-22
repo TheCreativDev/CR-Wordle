@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CR Wordle — Studio Game (No Firebase/Stats)</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/studio-game.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>CR Wordle</h1>
+      <p class="subtitle">Studio Build (no Firebase, no stats)</p>
+      <button id="stats-btn" class="stats-btn" title="View Stats" aria-hidden="true">📊</button>
+    </header>
+
+    <section class="search-section">
+      <div class="search-container">
+        <input
+          type="text"
+          id="card-search"
+          class="search-input"
+          placeholder="Type a card name..."
+          autocomplete="off"
+        />
+        <div id="autocomplete-list" class="autocomplete-list hidden"></div>
+      </div>
+    </section>
+
+    <div id="loss-message" class="loss-message hidden">
+      <h2>😞 Game Over!</h2>
+      <p>You've used all 10 guesses. The correct card was:</p>
+      <div class="target-card-reveal">
+        <img id="target-card-image" src="" alt="Target Card" />
+        <p class="target-card-name" id="target-card-name"></p>
+      </div>
+      <button id="loss-play-again-btn" class="play-again-btn loss-play-again-btn">Play Again</button>
+    </div>
+
+    <div id="win-message" class="win-message hidden">
+      <h2>🎉 Congratulations!</h2>
+      <p>You found the card in <span id="guess-count">0</span> guesses!</p>
+      <button id="play-again-btn" class="play-again-btn">Play Again</button>
+    </div>
+
+    <section class="attributes-header">
+      <div class="attribute-label non-toggleable">Card</div>
+      <div class="attribute-label toggleable" data-category="elixir">Elixir</div>
+      <div class="attribute-label toggleable" data-category="rarity">Rarity</div>
+      <div class="attribute-label toggleable" data-category="type">Type</div>
+      <div class="attribute-label toggleable" data-category="range">Range</div>
+      <div class="attribute-label toggleable" data-category="speed">Speed</div>
+      <div class="attribute-label toggleable" data-category="hitSpeed">Hit Speed</div>
+      <div class="attribute-label toggleable" data-category="releaseYear">Year</div>
+    </section>
+
+    <section id="guesses-container" class="guesses-container"></section>
+
+    <!-- Keep stats modal DOM so existing UI module doesn't crash; hidden/disabled via CSS -->
+    <div id="stats-modal" class="modal hidden" aria-hidden="true">
+      <div class="modal-content">
+        <span id="close-modal" class="close-btn">&times;</span>
+        <h2>Your Statistics</h2>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span id="stat-games" class="stat-value">0</span>
+            <span class="stat-label">Games Played</span>
+          </div>
+          <div class="stat-item">
+            <span id="stat-wins" class="stat-value">0</span>
+            <span class="stat-label">Games Won</span>
+          </div>
+          <div class="stat-item">
+            <span id="stat-winrate" class="stat-value">0%</span>
+            <span class="stat-label">Win Rate</span>
+          </div>
+          <div class="stat-item">
+            <span id="stat-average" class="stat-value">0</span>
+            <span class="stat-label">Avg. Guesses</span>
+          </div>
+          <div class="stat-item">
+            <span id="stat-best" class="stat-value">-</span>
+            <span class="stat-label">Best Game</span>
+          </div>
+          <div class="stat-item">
+            <span id="stat-streak" class="stat-value">0</span>
+            <span class="stat-label">Current Streak</span>
+          </div>
+        </div>
+        <button id="reset-stats-btn" class="reset-stats-btn">Reset Stats</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data + modules (no Firebase) -->
+  <script src="data/cards.js"></script>
+  <script src="js/studio/stats-stub.js"></script>
+  <script src="js/studio/studio-bridge.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

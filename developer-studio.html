@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CR Wordle — Developer Studio</title>
+  <link rel="stylesheet" href="css/studio.css" />
+</head>
+<body>
+  <div class="studio">
+    <header class="studio-header">
+      <div class="studio-title">
+        <h1>CR Wordle — Developer Studio</h1>
+        <p class="subtitle">Sandbox to iterate on UI/animations without touching the base game.</p>
+      </div>
+      <nav class="studio-nav">
+        <a class="nav-link" href="index.html">Open Base Game</a>
+        <a class="nav-link" href="dashboard.html">Open Dashboard</a>
+      </nav>
+    </header>
+
+    <main class="studio-grid" aria-label="Developer Studio Panels">
+      <!-- Corner 1: Play the game (Firebase-free) -->
+      <section class="panel panel--game" aria-label="Game Corner">
+        <div class="panel-header">
+          <h2>Game Corner</h2>
+          <p class="panel-subtitle">A Firebase-free embedded build for quick manual testing.</p>
+        </div>
+        <div class="panel-body panel-body--iframe">
+          <iframe
+            id="studio-game-frame"
+            class="game-frame"
+            title="CR Wordle Studio Game"
+            src="studio-game.html"
+            loading="lazy"
+            sandbox="allow-scripts allow-forms allow-same-origin"
+          ></iframe>
+        </div>
+      </section>
+
+      <!-- Corner 2: Flip-reveal animations -->
+      <section class="panel" aria-label="Flip Reveal Animations">
+        <div class="panel-header">
+          <h2>Flip-Reveal Animations</h2>
+          <p class="panel-subtitle">Preview sequential left→right reveal with delay and flip styles.</p>
+        </div>
+        <div class="panel-body">
+          <div class="controls">
+            <label class="control">
+              <span class="control-label">Animation</span>
+              <select id="anim-style" class="control-input">
+                <option value="flip-y">Flip Y (classic)</option>
+                <option value="flip-x">Flip X (vertical)</option>
+                <option value="flip-y-pop">Flip Y + pop</option>
+              </select>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Per-cell delay</span>
+              <input id="anim-delay" class="control-input" type="range" min="50" max="300" step="10" value="120" />
+              <span id="anim-delay-label" class="control-hint">120ms</span>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Duration</span>
+              <input id="anim-duration" class="control-input" type="range" min="250" max="900" step="25" value="450" />
+              <span id="anim-duration-label" class="control-hint">450ms</span>
+            </label>
+
+            <div class="control control--buttons">
+              <button id="anim-run" class="btn">Reveal</button>
+              <button id="anim-reset" class="btn btn--secondary">Reset</button>
+            </div>
+          </div>
+
+          <div class="lab">
+            <div class="lab-caption">Sample guess row (8 cells)</div>
+            <div id="anim-stage" class="guess-row-demo">
+              <!-- 8 flip cells injected by JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Corner 3: Category box styling -->
+      <section class="panel" aria-label="Category Box Styling">
+        <div class="panel-header">
+          <h2>Category Boxes</h2>
+          <p class="panel-subtitle">Change the look of the category cells (radius, borders, neumorphism feel).</p>
+        </div>
+        <div class="panel-body">
+          <div class="controls">
+            <label class="control">
+              <span class="control-label">Radius</span>
+              <input id="box-radius" class="control-input" type="range" min="4" max="22" step="1" value="12" />
+              <span id="box-radius-label" class="control-hint">12px</span>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Border width</span>
+              <input id="box-border" class="control-input" type="range" min="0" max="3" step="1" value="2" />
+              <span id="box-border-label" class="control-hint">2px</span>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Shadow strength</span>
+              <input id="box-shadow" class="control-input" type="range" min="0" max="12" step="1" value="6" />
+              <span id="box-shadow-label" class="control-hint">6</span>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Surface</span>
+              <select id="box-surface" class="control-input">
+                <option value="card">Card surface</option>
+                <option value="secondary">Secondary surface</option>
+              </select>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Neumorphism</span>
+              <select id="box-neu" class="control-input">
+                <option value="outset">Outset</option>
+                <option value="inset">Inset</option>
+                <option value="none">None</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="lab">
+            <div class="lab-caption">Preview states</div>
+            <div id="box-preview" class="box-preview">
+              <div class="studio-cell studio-cell--correct">Correct</div>
+              <div class="studio-cell studio-cell--incorrect">Wrong <span class="arrow">↑</span></div>
+              <div class="studio-cell studio-cell--na">N/A</div>
+              <div class="studio-cell studio-cell--disabled"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="studio-footer" aria-label="Apply Studio Settings">
+      <div class="studio-footer-inner">
+        <button id="save-apply" class="btn">Save &amp; Apply to Game Corner</button>
+        <span id="apply-status" class="apply-status">Not applied</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/studio/studio.js"></script>
+</body>
+</html>

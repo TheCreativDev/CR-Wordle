@@ -27,6 +27,20 @@ const UI = (function() {
     const MIN_ENABLED_CATEGORIES = 2;
     const TOGGLEABLE_CATEGORIES = ['elixir', 'rarity', 'type', 'range', 'speed', 'hitSpeed', 'releaseYear'];
 
+    function getRevealTiming() {
+        const styles = getComputedStyle(document.documentElement);
+        const staggerRaw = styles.getPropertyValue('--reveal-stagger-ms').trim();
+        const durationRaw = styles.getPropertyValue('--reveal-duration-ms').trim();
+
+        const stagger = Number.parseInt(staggerRaw, 10);
+        const duration = Number.parseInt(durationRaw, 10);
+
+        return {
+            stagger: Number.isFinite(stagger) ? stagger : 120,
+            duration: Number.isFinite(duration) ? duration : 450
+        };
+    }
+
     /**
      * Initialize UI elements and event listeners
      */
@@ -298,58 +312,69 @@ const UI = (function() {
         const attrs = result.attributes;
 
         row.innerHTML = `
-            <!-- Card Image -->
+            <!-- Card Image (no reveal animation) -->
             <div class="guess-cell card-cell">
                 <img src="${card.image}" alt="${card.name}" onerror="this.src='images/cards/placeholder.png'">
                 <span class="card-name">${card.name}</span>
             </div>
             
-            <!-- Elixir -->
-            ${renderAttributeCell(attrs.elixir, 'elixir')}
-            
-            <!-- Rarity -->
-            ${renderAttributeCell(attrs.rarity, 'rarity')}
-            
-            <!-- Type -->
-            ${renderAttributeCell(attrs.type, 'type')}
-            
-            <!-- Range -->
-            ${renderAttributeCell(attrs.range, 'range')}
-            
-            <!-- Speed -->
-            ${renderAttributeCell(attrs.speed, 'speed')}
-            
-            <!-- Hit Speed -->
-            ${renderHitSpeedCell(attrs.hitSpeed, 'hitSpeed')}
-            
-            <!-- Release Year -->
-            ${renderAttributeCell(attrs.releaseYear, 'releaseYear')}
+            <!-- Attribute cells (sequential reveal) -->
+            ${renderAttributeCell(attrs.elixir, 'elixir', 0)}
+            ${renderAttributeCell(attrs.rarity, 'rarity', 1)}
+            ${renderAttributeCell(attrs.type, 'type', 2)}
+            ${renderAttributeCell(attrs.range, 'range', 3)}
+            ${renderAttributeCell(attrs.speed, 'speed', 4)}
+            ${renderHitSpeedCell(attrs.hitSpeed, 'hitSpeed', 5)}
+            ${renderAttributeCell(attrs.releaseYear, 'releaseYear', 6)}
         `;
 
         // Insert at top of guesses container
         guessesContainer.insertBefore(row, guessesContainer.firstChild);
+
+        // Trigger reveal animation on next frame so the DOM is ready
+        requestAnimationFrame(() => {
+            row.querySelectorAll('.reveal-stagger').forEach((cell) => {
+                cell.classList.add('reveal');
+            });
+        });
     }
 
     /**
      * Render a single attribute cell
      */
-    function renderAttributeCell(attr, category = null) {
+    function renderAttributeCell(attr, category = null, revealIndex = 0) {
+        const timing = getRevealTiming();
+        const delay = revealIndex * timing.stagger;
+
         // Check if this category is disabled
         if (category && isCategoryDisabled(category)) {
-            return `<div class="guess-cell disabled-category"></div>`;
+            return `<div class="guess-cell disabled-category reveal-stagger reveal-no-flip" style="--reveal-delay: ${delay}ms; --reveal-duration: ${timing.duration}ms;"></div>`;
         }
 
+        // N/A rendering (flip-reveal still applies)
         if (attr.isNA) {
-            return `<div class="guess-cell na">N/A</div>`;
+            return `
+                <div class="guess-cell guess-attr reveal-stagger" style="--reveal-delay: ${delay}ms; --reveal-duration: ${timing.duration}ms;">
+                    <div class="flip-inner">
+                        <div class="guess-face front"></div>
+                        <div class="guess-face back na">N/A</div>
+                    </div>
+                </div>
+            `;
         }
 
         const statusClass = attr.isCorrect ? 'correct' : 'incorrect';
         const arrow = attr.direction ? getArrow(attr.direction) : '';
 
         return `
-            <div class="guess-cell ${statusClass}">
-                <span>${attr.value}</span>
-                ${arrow ? `<span class="arrow">${arrow}</span>` : ''}
+            <div class="guess-cell guess-attr reveal-stagger" style="--reveal-delay: ${delay}ms; --reveal-duration: ${timing.duration}ms;">
+                <div class="flip-inner">
+                    <div class="guess-face front"></div>
+                    <div class="guess-face back ${statusClass}">
+                        <span>${attr.value}</span>
+                        ${arrow ? `<span class="arrow">${arrow}</span>` : ''}
+                    </div>
+                </div>
             </div>
         `;
     }
@@ -357,14 +382,24 @@ const UI = (function() {
     /**
      * Render hit speed cell (handles decimal display)
      */
-    function renderHitSpeedCell(attr, category = null) {
+    function renderHitSpeedCell(attr, category = null, revealIndex = 0) {
+        const timing = getRevealTiming();
+        const delay = revealIndex * timing.stagger;
+
         // Check if this category is disabled
         if (category && isCategoryDisabled(category)) {
-            return `<div class="guess-cell disabled-category"></div>`;
+            return `<div class="guess-cell disabled-category reveal-stagger reveal-no-flip" style="--reveal-delay: ${delay}ms; --reveal-duration: ${timing.duration}ms;"></div>`;
         }
 
         if (attr.isNA || attr.value === "N/A") {
-            return `<div class="guess-cell na">N/A</div>`;
+            return `
+                <div class="guess-cell guess-attr reveal-stagger" style="--reveal-delay: ${delay}ms; --reveal-duration: ${timing.duration}ms;">
+                    <div class="flip-inner">
+                        <div class="guess-face front"></div>
+                        <div class="guess-face back na">N/A</div>
+                    </div>
+                </div>
+            `;
         }
 
         const statusClass = attr.isCorrect ? 'correct' : 'incorrect';
@@ -372,9 +407,14 @@ const UI = (function() {
         const displayValue = typeof attr.value === 'number' ? attr.value.toFixed(1) + 's' : attr.value;
 
         return `
-            <div class="guess-cell ${statusClass}">
-                <span>${displayValue}</span>
-                ${arrow ? `<span class="arrow">${arrow}</span>` : ''}
+            <div class="guess-cell guess-attr reveal-stagger" style="--reveal-delay: ${delay}ms; --reveal-duration: ${timing.duration}ms;">
+                <div class="flip-inner">
+                    <div class="guess-face front"></div>
+                    <div class="guess-face back ${statusClass}">
+                        <span>${displayValue}</span>
+                        ${arrow ? `<span class="arrow">${arrow}</span>` : ''}
+                    </div>
+                </div>
             </div>
         `;
     }
