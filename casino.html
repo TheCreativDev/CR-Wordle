@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CR Wordle - Play Now!</title>
+    <link rel="stylesheet" href="css/casino.css">
+</head>
+<body>
+    <!-- Score Bar -->
+    <header class="score-bar">
+        <a href="index.html" class="back-btn" title="Back to Game">
+            <span>←</span>
+        </a>
+        <div class="score-container">
+            <span class="score-label">YOUR SCORE</span>
+            <span id="score-value" class="score-value">0</span>
+        </div>
+        <div class="score-spacer"></div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="casino-main">
+        <h1 class="main-title">PLAY NOW!</h1>
+        <p class="main-subtitle">Risk your score to multiply your winnings</p>
+
+        <!-- Games Grid - Populated dynamically from registry -->
+        <section class="games-grid">
+            <!-- Game cards will be rendered here by JavaScript -->
+        </section>
+    </main>
+
+    <!-- Game Modal Overlay -->
+    <div id="game-modal" class="game-modal hidden">
+        <div class="game-modal-content">
+            <button class="game-modal-close" id="close-game-modal">&times;</button>
+            
+            <!-- Game modals container - Populated dynamically from registry -->
+            <div id="game-modals-container">
+                <!-- Game modal content will be rendered here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/firebase-analytics.js"></script>
+    
+    <!-- Casino Game System -->
+    <script src="casino-games/game-registry.js"></script>
+    
+    <!-- Individual Games (order determines display order) -->
+    <script src="casino-games/coin-flip/game.js"></script>
+    <script src="casino-games/dice-roll/game.js"></script>
+    <script src="casino-games/card-draw/game.js"></script>
+    <script src="casino-games/lucky-spin/game.js"></script>
+    <script src="casino-games/crash/game.js"></script>
+    <script src="casino-games/mystery-box/game.js"></script>
+    
+    <!-- Main Casino Controller -->
+    <script src="js/casino.js"></script>
+</body>
+</html>

@@ -542,6 +542,49 @@ body::before {
     background: var(--bg-darker);
 }
 
+/* ===== Casino Button ===== */
+.casino-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 16px 24px;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--text-primary);
+    background: linear-gradient(135deg, rgba(243, 156, 18, 0.3), rgba(241, 196, 15, 0.2));
+    border: 1px solid rgba(243, 156, 18, 0.4);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 4px 20px rgba(243, 156, 18, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.casino-btn:hover {
+    background: linear-gradient(135deg, rgba(243, 156, 18, 0.5), rgba(241, 196, 15, 0.35));
+    border-color: rgba(243, 156, 18, 0.7);
+    box-shadow: 
+        0 6px 28px rgba(243, 156, 18, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.casino-btn-icon {
+    font-size: 1.4rem;
+}
+
+.casino-btn-text {
+    background: linear-gradient(90deg, var(--gold), #ffe066);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
 .reset-stats-btn {
     width: 100%;
     padding: 12px;
