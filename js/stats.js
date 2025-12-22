@@ -1,123 +1,194 @@
 /**
  * Stats Module
- * Handles localStorage persistence for game statistics
+ * Handles Firebase persistence for game statistics
+ * Calculates stats from individual game records stored in Firebase
  */
 
 const Stats = (function() {
-    const STORAGE_KEY = 'cr_wordle_stats';
-
-    // Default stats structure
-    const defaultStats = {
-        gamesPlayed: 0,
-        gamesWon: 0,
-        totalGuesses: 0,
-        bestGame: null,
-        currentStreak: 0,
-        maxStreak: 0
-    };
-
     /**
-     * Get stats from localStorage
+     * Load stats by fetching all games from Firebase and calculating stats
+     * @returns {Promise} - Resolves with calculated stats object
      */
-    function getStoredStats() {
-        try {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) {
-                return { ...defaultStats, ...JSON.parse(stored) };
+    function loadStatsFromGames() {
+        return new Promise((resolve) => {
+            if (typeof FirebaseAnalytics === 'undefined') {
+                resolve(getDefaultStats());
+                return;
             }
-        } catch (e) {
-            console.error('Error reading stats from localStorage:', e);
-        }
-        return { ...defaultStats };
+
+            FirebaseAnalytics.fetchAllGames()
+                .then((games) => {
+                    const stats = calculateStatsFromGames(games);
+                    resolve(stats);
+                })
+                .catch((error) => {
+                    console.error('Error loading games from Firebase:', error);
+                    resolve(getDefaultStats());
+                });
+        });
     }
 
     /**
-     * Save stats to localStorage
+     * Calculate stats from array of game records
      */
-    function saveStats(stats) {
-        try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(stats));
-        } catch (e) {
-            console.error('Error saving stats to localStorage:', e);
-        }
-    }
+    function calculateStatsFromGames(games) {
+        const totalGames = games.length;
+        const wonGames = games.filter(g => g.won);
+        const lostGames = games.filter(g => !g.won);
+        
+        const gamesWon = wonGames.length;
+        const gamesLost = lostGames.length;
+        
+        // Total guesses for won games
+        const totalGuesses = wonGames.reduce((sum, g) => sum + (g.guesses || 0), 0);
 
-    /**
-     * Record a win
-     * @param {number} guessCount - Number of guesses it took to win
-     */
-    function recordWin(guessCount) {
-        const stats = getStoredStats();
+        // Total score for won games
+        const totalScore = wonGames.reduce((sum, g) => {
+            const score = Number(g.score);
+            return sum + (Number.isFinite(score) ? score : 0);
+        }, 0);
         
-        stats.gamesPlayed++;
-        stats.gamesWon++;
-        stats.totalGuesses += guessCount;
-        stats.currentStreak++;
-        
-        // Update best game
-        if (stats.bestGame === null || guessCount < stats.bestGame) {
-            stats.bestGame = guessCount;
+        // Best game (lowest guesses to win)
+        let bestGame = null;
+        if (wonGames.length > 0) {
+            bestGame = Math.min(...wonGames.map(g => g.guesses));
         }
-        
-        // Update max streak
-        if (stats.currentStreak > stats.maxStreak) {
-            stats.maxStreak = stats.currentStreak;
+
+        // Best score (highest score)
+        let bestScore = null;
+        if (wonGames.length > 0) {
+            bestScore = Math.max(...wonGames.map(g => {
+                const score = Number(g.score);
+                return Number.isFinite(score) ? score : 0;
+            }));
         }
-        
-        saveStats(stats);
-    }
-
-    /**
-     * Record a loss (if you implement a max guess limit in the future)
-     */
-    function recordLoss() {
-        const stats = getStoredStats();
-        
-        stats.gamesPlayed++;
-        stats.currentStreak = 0;
-        
-        saveStats(stats);
-    }
-
-    /**
-     * Get formatted stats for display
-     */
-    function getStats() {
-        const stats = getStoredStats();
-        
-        // Calculate win rate
-        const winRate = stats.gamesPlayed > 0 
-            ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100) 
-            : 0;
-        
-        // Calculate average guesses (only for won games)
-        const averageGuesses = stats.gamesWon > 0 
-            ? (stats.totalGuesses / stats.gamesWon).toFixed(1)
-            : 0;
         
         return {
-            gamesPlayed: stats.gamesPlayed,
-            gamesWon: stats.gamesWon,
-            winRate: winRate,
-            averageGuesses: averageGuesses,
-            bestGame: stats.bestGame,
-            currentStreak: stats.currentStreak,
-            maxStreak: stats.maxStreak
+            gamesStarted: totalGames,
+            gamesWon: gamesWon,
+            gamesLost: gamesLost,
+            totalGuesses: totalGuesses,
+            bestGame: bestGame,
+            totalScore: Number(totalScore.toFixed(2)),
+            bestScore: bestScore
         };
     }
 
     /**
-     * Reset all stats
+     * Get default stats structure
      */
-    function reset() {
-        saveStats({ ...defaultStats });
+    function getDefaultStats() {
+        return {
+            gamesStarted: 0,
+            gamesWon: 0,
+            gamesLost: 0,
+            totalGuesses: 0,
+            bestGame: null,
+            totalScore: 0,
+            bestScore: null
+        };
+    }
+
+    /**
+     * Load global stats from Firebase (async)
+     * @returns {Promise} - Resolves with global stats object
+     */
+    function loadGlobalStats() {
+        return new Promise((resolve) => {
+            if (typeof FirebaseAnalytics === 'undefined') {
+                resolve({ gamesStarted: 0 });
+                return;
+            }
+
+            FirebaseAnalytics.fetchStats()
+                .then((stats) => {
+                    resolve({ gamesStarted: stats.gamesStarted || 0 });
+                })
+                .catch((error) => {
+                    console.error('Error loading global stats:', error);
+                    resolve({ gamesStarted: 0 });
+                });
+        });
+    }
+
+    /**
+     * Record a win - handled by FirebaseAnalytics.logGame()
+     * This is called for compatibility but actual recording happens in ui.js
+     * @param {number} guessCount - Number of guesses it took to win
+     */
+    function recordWin(guessCount) {
+        // Stats are recorded via FirebaseAnalytics.logGame() in ui.js handleWin()
+        // This function exists for API compatibility
+        console.log('Win recorded via FirebaseAnalytics.logGame()');
+    }
+
+    /**
+     * Record a loss - handled by FirebaseAnalytics.logGame()
+     * This is called for compatibility but actual recording happens in ui.js
+     */
+    function recordLoss() {
+        // Stats are recorded via FirebaseAnalytics.logGame() in ui.js handleLoss()
+        // This function exists for API compatibility
+        console.log('Loss recorded via FirebaseAnalytics.logGame()');
+    }
+
+    /**
+     * Get formatted stats for display (async)
+     * @returns {Promise} - Resolves with formatted stats
+     */
+    function getStats() {
+        return Promise.all([loadStatsFromGames(), loadGlobalStats()])
+            .then(([userStats, globalStats]) => {
+                const gamesStarted = userStats.gamesStarted || 0;
+                const gamesWon = userStats.gamesWon || 0;
+                const gamesLost = userStats.gamesLost || 0;
+                const totalGuesses = userStats.totalGuesses || 0;
+                const totalScore = userStats.totalScore || 0;
+                
+                // Calculate win rate based on completed games
+                const completedGames = gamesWon + gamesLost;
+                const winRate = completedGames > 0 
+                    ? Math.round((gamesWon / completedGames) * 100) 
+                    : 0;
+                
+                // Calculate average guesses (only for won games)
+                const averageGuesses = gamesWon > 0 
+                    ? (totalGuesses / gamesWon).toFixed(1)
+                    : 0;
+
+                // Calculate average score (only for won games)
+                const averageScore = gamesWon > 0
+                    ? Number((totalScore / gamesWon).toFixed(2))
+                    : 0;
+                
+                return {
+                    gamesStarted: gamesStarted,
+                    gamesWon: gamesWon,
+                    gamesLost: gamesLost,
+                    winRate: winRate,
+                    averageGuesses: averageGuesses,
+                    bestGame: userStats.bestGame,
+                    totalScore: Number(totalScore.toFixed(2)),
+                    averageScore: averageScore,
+                    bestScore: userStats.bestScore,
+                    globalGamesStarted: globalStats.gamesStarted || 0
+                };
+            });
+    }
+
+    /**
+     * Initialize - no longer needed but kept for API compatibility
+     * @returns {Promise}
+     */
+    function init() {
+        return Promise.resolve();
     }
 
     // Public API
     return {
+        init,
         recordWin,
         recordLoss,
-        getStats,
-        reset
+        getStats
     };
 })();

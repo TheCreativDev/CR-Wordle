@@ -32,6 +32,10 @@ const FirebaseAnalytics = (function() {
                 timestamp: firebase.database.ServerValue.TIMESTAMP,
                 won: gameData.won,
                 guesses: gameData.guesses,
+                score: typeof gameData.score === 'number' ? gameData.score : 0,
+                scoreBase: typeof gameData.scoreBase === 'number' ? gameData.scoreBase : 0,
+                scoreMultiplier: typeof gameData.scoreMultiplier === 'number' ? gameData.scoreMultiplier : 1,
+                disabledCategories: Array.isArray(gameData.disabledCategories) ? gameData.disabledCategories : [],
                 targetCard: gameData.targetCard,
                 guessedCards: gameData.guessedCards || [],
                 date: new Date().toISOString()

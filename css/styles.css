@@ -239,7 +239,7 @@ body::before {
     padding: 10px 10px 12px 10px;
     background: transparent;
     border: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.35);
     margin-bottom: 8px;
 }
 
@@ -523,6 +523,23 @@ body::before {
     color: var(--text-secondary);
     text-align: center;
     margin-top: 5px;
+}
+
+.global-stats-title {
+    text-align: center;
+    margin: 10px 0 15px;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.global-stats {
+    grid-template-columns: 1fr;
+    margin-bottom: 20px;
+}
+
+.global-stats .stat-item {
+    background: var(--bg-darker);
 }
 
 .reset-stats-btn {

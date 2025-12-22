@@ -11,12 +11,12 @@ const UI = (function() {
     let winMessage;
     let lossMessage;
     let guessCountSpan;
+    let scorePointsSpan;
     let playAgainBtn;
     let lossPlayAgainBtn;
     let statsBtn;
     let statsModal;
     let closeModalBtn;
-    let resetStatsBtn;
 
     // Autocomplete state
     let selectedIndex = -1;
@@ -52,12 +52,12 @@ const UI = (function() {
         winMessage = document.getElementById('win-message');
         lossMessage = document.getElementById('loss-message');
         guessCountSpan = document.getElementById('guess-count');
+        scorePointsSpan = document.getElementById('score-points');
         playAgainBtn = document.getElementById('play-again-btn');
         lossPlayAgainBtn = document.getElementById('loss-play-again-btn');
         statsBtn = document.getElementById('stats-btn');
         statsModal = document.getElementById('stats-modal');
         closeModalBtn = document.getElementById('close-modal');
-        resetStatsBtn = document.getElementById('reset-stats-btn');
 
         // Set up event listeners
         setupEventListeners();
@@ -111,6 +111,42 @@ const UI = (function() {
         return disabledCategories.has(category);
     }
 
+    function getBaseScoreForGuesses(guessCount) {
+        if (!Number.isFinite(guessCount) || guessCount <= 0) return 0;
+        if (guessCount === 1) return 10;
+        if (guessCount === 2) return 5;
+        if (guessCount === 3) return 3;
+        if (guessCount === 4) return 2;
+        return 1;
+    }
+
+    function getCategoryDisabledMultiplier(category) {
+        // elixir, rarity, year (releaseYear) => 1.5x each
+        if (category === 'elixir' || category === 'rarity' || category === 'releaseYear') {
+            return 1.5;
+        }
+        // all other toggleable categories => 1.25x each
+        return 1.25;
+    }
+
+    function computeScore(guessCount) {
+        const base = getBaseScoreForGuesses(guessCount);
+        let multiplier = 1;
+        disabledCategories.forEach((category) => {
+            multiplier *= getCategoryDisabledMultiplier(category);
+        });
+
+        // Store with 2-decimal precision (avoid floating point noise)
+        const score = Number((base * multiplier).toFixed(2));
+        return { base, multiplier: Number(multiplier.toFixed(4)), score };
+    }
+
+    function formatScoreForDisplay(score) {
+        if (!Number.isFinite(score)) return '0';
+        // Show up to 2 decimals, trim trailing zeros
+        return score.toFixed(2).replace(/\.00$/, '').replace(/(\.[0-9])0$/, '$1');
+    }
+
     /**
      * Set up all event listeners
      */
@@ -133,14 +169,6 @@ const UI = (function() {
         statsModal.addEventListener('click', (e) => {
             if (e.target === statsModal) {
                 hideStatsModal();
-            }
-        });
-
-        // Reset stats button
-        resetStatsBtn.addEventListener('click', () => {
-            if (confirm('Are you sure you want to reset all statistics?')) {
-                Stats.reset();
-                updateStatsDisplay();
             }
         });
 
@@ -448,6 +476,8 @@ const UI = (function() {
     function handleWin() {
         const guessCount = Game.getGuessCount();
         const gameState = Game.getGameState();
+
+        const scoreResult = computeScore(guessCount);
         
         // Update stats
         Stats.recordWin(guessCount);
@@ -457,6 +487,10 @@ const UI = (function() {
             FirebaseAnalytics.logGame({
                 won: true,
                 guesses: guessCount,
+                score: scoreResult.score,
+                scoreBase: scoreResult.base,
+                scoreMultiplier: scoreResult.multiplier,
+                disabledCategories: Array.from(disabledCategories),
                 targetCard: gameState.targetCard.name,
                 guessedCards: gameState.guessedCards.map(c => c.name)
             });
@@ -469,6 +503,9 @@ const UI = (function() {
         const revealDelay = getTotalRevealDuration();
         setTimeout(() => {
             guessCountSpan.textContent = guessCount;
+            if (scorePointsSpan) {
+                scorePointsSpan.textContent = formatScoreForDisplay(scoreResult.score);
+            }
             winMessage.classList.remove('hidden');
         }, revealDelay);
     }
@@ -488,6 +525,10 @@ const UI = (function() {
             FirebaseAnalytics.logGame({
                 won: false,
                 guesses: gameState.guessCount,
+                score: 0,
+                scoreBase: 0,
+                scoreMultiplier: 1,
+                disabledCategories: Array.from(disabledCategories),
                 targetCard: targetCard.name,
                 guessedCards: gameState.guessedCards.map(c => c.name)
             });
@@ -552,17 +593,42 @@ const UI = (function() {
     }
 
     /**
-     * Update stats display in modal
+     * Update stats display in modal (async)
      */
     function updateStatsDisplay() {
-        const stats = Stats.getStats();
+        // Show loading state
+        document.getElementById('stat-games').textContent = '...';
+        document.getElementById('stat-wins').textContent = '...';
+        document.getElementById('stat-losses').textContent = '...';
+        document.getElementById('stat-winrate').textContent = '...';
+        document.getElementById('stat-average').textContent = '...';
+        document.getElementById('stat-best').textContent = '...';
+        document.getElementById('stat-total-score').textContent = '...';
+        document.getElementById('stat-best-score').textContent = '...';
+        document.getElementById('stat-global-games').textContent = '...';
         
-        document.getElementById('stat-games').textContent = stats.gamesPlayed;
-        document.getElementById('stat-wins').textContent = stats.gamesWon;
-        document.getElementById('stat-winrate').textContent = stats.winRate + '%';
-        document.getElementById('stat-average').textContent = stats.averageGuesses;
-        document.getElementById('stat-best').textContent = stats.bestGame || '-';
-        document.getElementById('stat-streak').textContent = stats.currentStreak;
+        Stats.getStats().then((stats) => {
+            document.getElementById('stat-games').textContent = stats.gamesStarted;
+            document.getElementById('stat-wins').textContent = stats.gamesWon;
+            document.getElementById('stat-losses').textContent = stats.gamesLost;
+            document.getElementById('stat-winrate').textContent = stats.winRate + '%';
+            document.getElementById('stat-average').textContent = stats.averageGuesses;
+            document.getElementById('stat-best').textContent = stats.bestGame || '-';
+            document.getElementById('stat-total-score').textContent = formatScoreForDisplay(stats.totalScore || 0);
+            document.getElementById('stat-best-score').textContent = Number.isFinite(stats.bestScore) ? formatScoreForDisplay(stats.bestScore) : '-';
+            document.getElementById('stat-global-games').textContent = stats.globalGamesStarted;
+        }).catch((error) => {
+            console.error('Error loading stats:', error);
+            document.getElementById('stat-games').textContent = '-';
+            document.getElementById('stat-wins').textContent = '-';
+            document.getElementById('stat-losses').textContent = '-';
+            document.getElementById('stat-winrate').textContent = '-';
+            document.getElementById('stat-average').textContent = '-';
+            document.getElementById('stat-best').textContent = '-';
+            document.getElementById('stat-total-score').textContent = '-';
+            document.getElementById('stat-best-score').textContent = '-';
+            document.getElementById('stat-global-games').textContent = '-';
+        });
     }
 
     // Public API

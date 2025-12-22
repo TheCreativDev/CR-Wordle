@@ -45,6 +45,18 @@
         const avgGuesses = wonGames.length > 0 
             ? (wonGames.reduce((sum, g) => sum + g.guesses, 0) / wonGames.length).toFixed(1)
             : 'N/A';
+
+        // Score stats (wins only)
+        const totalScore = wonGames.reduce((sum, g) => {
+            const score = Number(g.score);
+            return sum + (Number.isFinite(score) ? score : 0);
+        }, 0);
+        const avgScore = wonGames.length > 0 ? (totalScore / wonGames.length) : null;
+
+        const formatScore = (value) => {
+            if (!Number.isFinite(value)) return 'N/A';
+            return value.toFixed(2).replace(/\.00$/, '').replace(/(\.[0-9])0$/, '$1');
+        };
         
         // Update DOM
         document.getElementById('total-games').textContent = totalGames;
@@ -52,6 +64,8 @@
         document.getElementById('games-lost').textContent = gamesLost;
         document.getElementById('win-rate').textContent = `${winRate}%`;
         document.getElementById('avg-guesses').textContent = avgGuesses;
+        document.getElementById('total-score').textContent = formatScore(totalScore);
+        document.getElementById('avg-score').textContent = formatScore(avgScore);
         document.getElementById('games-started').textContent = stats.gamesStarted || 0;
         
         // Most targeted cards
@@ -107,6 +121,8 @@
         document.getElementById('games-lost').textContent = 'Error';
         document.getElementById('win-rate').textContent = 'Error';
         document.getElementById('avg-guesses').textContent = 'Error';
+        document.getElementById('total-score').textContent = 'Error';
+        document.getElementById('avg-score').textContent = 'Error';
         document.getElementById('games-started').textContent = 'Error';
         document.getElementById('top-cards-list').innerHTML = 
             '<p class="loading-text" style="color: var(--incorrect-red);">Failed to load statistics. Please check Firebase configuration.</p>';

@@ -45,6 +45,7 @@
         <div id="win-message" class="win-message hidden">
             <h2>🎉 Congratulations!</h2>
             <p>You found the card in <span id="guess-count">0</span> guesses!</p>
+            <p>Score: <span id="score-points">0</span></p>
             <button id="play-again-btn" class="play-again-btn">Play Again</button>
         </div>
 
@@ -73,11 +74,15 @@
                 <div class="stats-grid">
                     <div class="stat-item">
                         <span id="stat-games" class="stat-value">0</span>
-                        <span class="stat-label">Games Played</span>
+                        <span class="stat-label">Games Completed</span>
                     </div>
                     <div class="stat-item">
                         <span id="stat-wins" class="stat-value">0</span>
                         <span class="stat-label">Games Won</span>
+                    </div>
+                    <div class="stat-item">
+                        <span id="stat-losses" class="stat-value">0</span>
+                        <span class="stat-label">Games Lost</span>
                     </div>
                     <div class="stat-item">
                         <span id="stat-winrate" class="stat-value">0%</span>
@@ -92,11 +97,21 @@
                         <span class="stat-label">Best Game</span>
                     </div>
                     <div class="stat-item">
-                        <span id="stat-streak" class="stat-value">0</span>
-                        <span class="stat-label">Current Streak</span>
+                        <span id="stat-total-score" class="stat-value">0</span>
+                        <span class="stat-label">Total Score</span>
+                    </div>
+                    <div class="stat-item">
+                        <span id="stat-best-score" class="stat-value">-</span>
+                        <span class="stat-label">Best Score</span>
                     </div>
                 </div>
-                <button id="reset-stats-btn" class="reset-stats-btn">Reset Stats</button>
+                <h3 class="global-stats-title">Global Statistics</h3>
+                <div class="stats-grid global-stats">
+                    <div class="stat-item">
+                        <span id="stat-global-games" class="stat-value">0</span>
+                        <span class="stat-label">Games Started</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

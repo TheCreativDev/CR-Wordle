@@ -111,7 +111,7 @@ const App = (function() {
         Game.startNewGame();
         UI.resetUI();
         
-        // Log game start to Firebase
+        // Log game start to Firebase global counter
         if (typeof FirebaseAnalytics !== 'undefined') {
             FirebaseAnalytics.logGameStart();
         }
