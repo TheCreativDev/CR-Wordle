@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CR Wordle — Developer Studio</title>
+  <link rel="stylesheet" href="css/attribute-cells.css" />
   <link rel="stylesheet" href="css/studio.css" />
 </head>
 <body>
@@ -45,7 +46,7 @@
           <p class="panel-subtitle">Preview sequential left→right reveal with delay and flip styles.</p>
         </div>
         <div class="panel-body">
-          <div class="controls">
+          <div class="controls controls--vertical controls--anim">
             <label class="control">
               <span class="control-label">Animation</span>
               <select id="anim-style" class="control-input">
@@ -57,13 +58,13 @@
 
             <label class="control">
               <span class="control-label">Per-cell delay</span>
-              <input id="anim-delay" class="control-input" type="range" min="50" max="300" step="10" value="120" />
+              <input id="anim-delay" class="control-input" type="range" min="50" max="700" step="10" value="120" />
               <span id="anim-delay-label" class="control-hint">120ms</span>
             </label>
 
             <label class="control">
               <span class="control-label">Duration</span>
-              <input id="anim-duration" class="control-input" type="range" min="250" max="900" step="25" value="450" />
+              <input id="anim-duration" class="control-input" type="range" min="250" max="2000" step="25" value="450" />
               <span id="anim-duration-label" class="control-hint">450ms</span>
             </label>
 
@@ -85,8 +86,8 @@
       <!-- Corner 3: Category box styling -->
       <section class="panel" aria-label="Category Box Styling">
         <div class="panel-header">
-          <h2>Category Boxes</h2>
-          <p class="panel-subtitle">Change the look of the category cells (radius, borders, neumorphism feel).</p>
+          <h2>Attribute Cells</h2>
+          <p class="panel-subtitle">Tweak attribute cell styling (colors, borders, typography, shadows).</p>
         </div>
         <div class="panel-body">
           <div class="controls">
@@ -103,9 +104,85 @@
             </label>
 
             <label class="control">
-              <span class="control-label">Shadow strength</span>
-              <input id="box-shadow" class="control-input" type="range" min="0" max="12" step="1" value="6" />
-              <span id="box-shadow-label" class="control-hint">6</span>
+              <span class="control-label">Right color</span>
+              <input id="cell-correct-bg" class="control-input" type="color" value="#2ecc71" />
+              <span class="control-hint"></span>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Wrong color</span>
+              <input id="cell-incorrect-bg" class="control-input" type="color" value="#e74c3c" />
+              <span class="control-hint"></span>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Right border</span>
+              <input id="cell-correct-border" class="control-input" type="color" value="#2ecc71" />
+              <span class="control-hint"></span>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Wrong border</span>
+              <input id="cell-incorrect-border" class="control-input" type="color" value="#e74c3c" />
+              <span class="control-hint"></span>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Font</span>
+              <select id="cell-font-family" class="control-input">
+                <option value="system-ui, -apple-system, 'Segoe UI', Arial, sans-serif">System UI</option>
+                <option value="'Supercell Magic', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif">Supercell Magic</option>
+                <option value="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">Segoe UI</option>
+                <option value="Arial, Helvetica, sans-serif">Arial</option>
+                <option value="Verdana, Geneva, sans-serif">Verdana</option>
+                <option value="Tahoma, Geneva, sans-serif">Tahoma</option>
+                <option value="'Trebuchet MS', Arial, sans-serif">Trebuchet</option>
+                <option value="Georgia, 'Times New Roman', serif">Georgia</option>
+                <option value="'Times New Roman', Times, serif">Times New Roman</option>
+                <option value="'Courier New', Courier, monospace">Courier New</option>
+              </select>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Font size</span>
+              <input id="cell-font-size" class="control-input" type="range" min="12" max="22" step="1" value="14" />
+              <span id="cell-font-size-label" class="control-hint">14px</span>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Font color</span>
+              <input id="cell-font-color" class="control-input" type="color" value="#ffffff" />
+              <span class="control-hint"></span>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Arrow color (wrong)</span>
+              <input id="arrow-color" class="control-input" type="color" value="#000000" />
+              <span class="control-hint"></span>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Arrow opacity (wrong)</span>
+              <input id="arrow-opacity" class="control-input" type="range" min="0" max="100" step="5" value="35" />
+              <span id="arrow-opacity-label" class="control-hint">35%</span>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Arrow size (wrong)</span>
+              <input id="arrow-size" class="control-input" type="range" min="32" max="120" step="1" value="72" />
+              <span id="arrow-size-label" class="control-hint">72px</span>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Shadow size</span>
+              <input id="shadow-size" class="control-input" type="range" min="0" max="24" step="1" value="8" />
+              <span id="shadow-size-label" class="control-hint">8px</span>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Shadow intensity</span>
+              <input id="shadow-intensity" class="control-input" type="range" min="0" max="100" step="5" value="55" />
+              <span id="shadow-intensity-label" class="control-hint">55%</span>
             </label>
 
             <label class="control">
@@ -129,11 +206,78 @@
           <div class="lab">
             <div class="lab-caption">Preview states</div>
             <div id="box-preview" class="box-preview">
-              <div class="studio-cell studio-cell--correct">Correct</div>
-              <div class="studio-cell studio-cell--incorrect">Wrong <span class="arrow">↑</span></div>
-              <div class="studio-cell studio-cell--na">N/A</div>
-              <div class="studio-cell studio-cell--disabled"></div>
+              <div class="guess-cell guess-attr">
+                <div class="flip-inner" style="transform: rotateY(180deg);">
+                  <div class="guess-face front"></div>
+                  <div class="guess-face back correct"><span>Correct</span></div>
+                </div>
+              </div>
+
+              <div class="guess-cell guess-attr">
+                <div class="flip-inner" style="transform: rotateY(180deg);">
+                  <div class="guess-face front"></div>
+                  <div class="guess-face back incorrect">
+                    <span>Wrong</span>
+                    <span class="arrow">↑</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="guess-cell guess-attr">
+                <div class="flip-inner" style="transform: rotateY(180deg);">
+                  <div class="guess-face front"></div>
+                  <div class="guess-face back na">N/A</div>
+                </div>
+              </div>
+
+              <div class="guess-cell disabled-category"></div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Corner 4: Wallpaper Settings -->
+      <section class="panel" aria-label="Wallpaper Settings">
+        <div class="panel-header">
+          <h2>Wallpaper</h2>
+          <p class="panel-subtitle">Configure the background wallpaper and dimming.</p>
+        </div>
+        <div class="panel-body">
+          <div class="controls controls--vertical">
+            <label class="control">
+              <span class="control-label">Wallpaper</span>
+              <select id="wallpaper-select" class="control-input">
+                <option value="Card_Evolution.png">Card Evolution</option>
+                <option value="Illustration_ClassicDeckEvo_GoblinsGambit.png">Goblins Gambit</option>
+                <option value="Illustration_DartGoblinEVO_RunicMountain.png">Dart Goblin Evo</option>
+                <option value="Illustration_DrillEvo_GoblinRevolution.png">Goblin Revolution</option>
+                <option value="Illustration_ElectroDragonEvoDraft_Shocktober2.png">Electro Dragon</option>
+                <option value="Illustration_EliteBarbs.png">Elite Barbs</option>
+                <option value="Illustration_GoblinPartyRocket_ElectroBirthday.png">Goblin Party</option>
+                <option value="Illustration_GoblinQueensJourney.png">Goblin Queen</option>
+                <option value="Illustration_Goblinstein_Shocktober2.png">Goblinstein</option>
+                <option value="Illustration_LoveBuff_LumberLove.png">Lumber Love</option>
+                <option value="Illustration_LoveSparks_ExplosiveValentines.png">Explosive Valentines</option>
+                <option value="Illustration_MiddleBuff_DaggerDuchess.png">Dagger Duchess</option>
+                <option value="Illustration_MusketeerEvoDraft_MusketsAtDawn.png">Muskets at Dawn</option>
+                <option value="Illustration_PheonixSpawner_MusketsAtDawn.png">Phoenix Spawner</option>
+                <option value="Illustration_SpookyChess_Shocktober2.png">Spooky Chess</option>
+                <option value="Illustration_TriWizardShowdown_MagicMayhem.png">Magic Mayhem</option>
+                <option value="Mastery.png">Mastery</option>
+                <option value="Prince_Victory.png">Prince Victory</option>
+                <option value="Skeleton_King.png">Skeleton King</option>
+              </select>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Dim opacity</span>
+              <input id="wallpaper-dim" class="control-input" type="range" min="0" max="80" step="5" value="20" />
+              <span id="wallpaper-dim-label" class="control-hint">20%</span>
+            </label>
+          </div>
+
+          <div class="lab">
+            <div class="lab-caption">Preview shown in Game Corner</div>
           </div>
         </div>
       </section>
@@ -143,11 +287,13 @@
     <footer class="studio-footer" aria-label="Apply Studio Settings">
       <div class="studio-footer-inner">
         <button id="save-apply" class="btn">Save &amp; Apply to Game Corner</button>
+        <button id="export-defaults" class="btn btn--export" title="Copy theme defaults to clipboard">📋 Export Defaults</button>
         <span id="apply-status" class="apply-status">Not applied</span>
       </div>
     </footer>
   </div>
 
+  <script src="js/theme-defaults.js"></script>
   <script src="js/studio/studio.js"></script>
 </body>
 </html>

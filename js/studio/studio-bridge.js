@@ -43,6 +43,39 @@
           document.documentElement.style.setProperty('--guess-cell-border-width', `${boxes.borderWidthPx}px`);
         }
 
+        if (typeof boxes.correctBg === 'string') {
+          document.documentElement.style.setProperty('--attr-correct-bg', boxes.correctBg);
+        }
+        if (typeof boxes.incorrectBg === 'string') {
+          document.documentElement.style.setProperty('--attr-incorrect-bg', boxes.incorrectBg);
+        }
+        if (typeof boxes.correctBorder === 'string') {
+          document.documentElement.style.setProperty('--attr-correct-border', boxes.correctBorder);
+        }
+        if (typeof boxes.incorrectBorder === 'string') {
+          document.documentElement.style.setProperty('--attr-incorrect-border', boxes.incorrectBorder);
+        }
+
+        if (typeof boxes.fontFamily === 'string') {
+          document.documentElement.style.setProperty('--attr-font-family', boxes.fontFamily);
+        }
+        if (Number.isFinite(boxes.fontSizePx)) {
+          document.documentElement.style.setProperty('--attr-font-size', `${boxes.fontSizePx}px`);
+        }
+        if (typeof boxes.fontColor === 'string') {
+          document.documentElement.style.setProperty('--attr-font-color', boxes.fontColor);
+        }
+
+        if (typeof boxes.arrowColor === 'string') {
+          document.documentElement.style.setProperty('--attr-arrow-color', boxes.arrowColor);
+        }
+        if (Number.isFinite(boxes.arrowOpacityPct)) {
+          document.documentElement.style.setProperty('--attr-arrow-opacity', String(boxes.arrowOpacityPct));
+        }
+        if (Number.isFinite(boxes.arrowSizePx)) {
+          document.documentElement.style.setProperty('--attr-arrow-size', `${boxes.arrowSizePx}px`);
+        }
+
         // Surface maps to the game theme vars.
         if (boxes.surface === 'secondary') {
           document.documentElement.style.setProperty('--guess-cell-front-bg', 'var(--bg-secondary)');
@@ -51,24 +84,39 @@
         }
 
         // Shadow
-        const strength = Number(boxes.shadowStrength);
+        const size = Number(boxes.shadowSizePx ?? boxes.shadowStrength ?? 0);
+        const intensityPct = Number(boxes.shadowIntensityPct ?? 55);
         const neu = boxes.neumorphism;
-        if (!strength || neu === 'none') {
+        if (!size || !intensityPct || neu === 'none') {
           document.documentElement.style.setProperty('--guess-cell-shadow', 'none');
         } else {
-          const dark = `rgba(0, 0, 0, ${0.10 + strength * 0.012})`;
-          const light = `rgba(255, 255, 255, ${0.05 + strength * 0.008})`;
+          const intensity = Math.max(0, Math.min(1, intensityPct / 100));
+          const dark = `rgba(0, 0, 0, ${0.06 + intensity * 0.22})`;
+          const light = `rgba(255, 255, 255, ${0.03 + intensity * 0.14})`;
+          const blur = size * 2;
           if (neu === 'inset') {
             document.documentElement.style.setProperty(
               '--guess-cell-shadow',
-              `inset -${strength}px -${strength}px ${strength * 2}px ${light}, inset ${strength}px ${strength}px ${strength * 2}px ${dark}`
+              `inset -${size}px -${size}px ${blur}px ${light}, inset ${size}px ${size}px ${blur}px ${dark}`
             );
           } else {
             document.documentElement.style.setProperty(
               '--guess-cell-shadow',
-              `-${strength}px -${strength}px ${strength * 2}px ${light}, ${strength}px ${strength}px ${strength * 2}px ${dark}`
+              `-${size}px -${size}px ${blur}px ${light}, ${size}px ${size}px ${blur}px ${dark}`
             );
           }
+        }
+      }
+
+      // Wallpaper settings
+      const { wallpaper } = settings;
+      if (wallpaper) {
+        if (typeof wallpaper.image === 'string') {
+          const url = `images/wallpapers/${wallpaper.image}`;
+          document.documentElement.style.setProperty('--wallpaper-url', `url('${url}')`);
+        }
+        if (Number.isFinite(wallpaper.dimPct)) {
+          document.documentElement.style.setProperty('--wallpaper-dim', String(wallpaper.dimPct / 100));
         }
       }
     } catch {

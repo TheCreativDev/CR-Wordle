@@ -146,6 +146,9 @@ const UI = (function() {
 
         // Play again button
         playAgainBtn.addEventListener('click', () => {
+            if (typeof Wallpaper !== 'undefined' && Wallpaper.randomize) {
+                Wallpaper.randomize();
+            }
             if (typeof App !== 'undefined' && App.startNewGame) {
                 App.startNewGame();
             }
@@ -153,6 +156,9 @@ const UI = (function() {
 
         // Loss play again button
         lossPlayAgainBtn.addEventListener('click', () => {
+            if (typeof Wallpaper !== 'undefined' && Wallpaper.randomize) {
+                Wallpaper.randomize();
+            }
             if (typeof App !== 'undefined' && App.startNewGame) {
                 App.startNewGame();
             }
@@ -427,6 +433,16 @@ const UI = (function() {
     }
 
     /**
+     * Calculate total reveal animation duration (all cells flipped)
+     */
+    function getTotalRevealDuration() {
+        const timing = getRevealTiming();
+        const attributeCount = 7; // elixir, rarity, type, range, speed, hitSpeed, releaseYear
+        // Last cell starts at (attributeCount - 1) * stagger, then takes duration to complete
+        return (attributeCount - 1) * timing.stagger;
+    }
+
+    /**
      * Handle game win
      */
     function handleWin() {
@@ -446,12 +462,15 @@ const UI = (function() {
             });
         }
         
-        // Show win message
-        guessCountSpan.textContent = guessCount;
-        winMessage.classList.remove('hidden');
-        
-        // Disable search
+        // Disable search immediately
         searchInput.disabled = true;
+        
+        // Delay win message until all attribute cards have flipped
+        const revealDelay = getTotalRevealDuration();
+        setTimeout(() => {
+            guessCountSpan.textContent = guessCount;
+            winMessage.classList.remove('hidden');
+        }, revealDelay);
     }
 
     /**
@@ -474,16 +493,17 @@ const UI = (function() {
             });
         }
         
-        // Show loss message with target card
-        document.getElementById('target-card-image').src = targetCard.image;
-        document.getElementById('target-card-name').textContent = targetCard.name;
-        lossMessage.classList.remove('hidden');
-        
-        // Add red tint to search input
+        // Add red tint to search input and disable immediately
         searchInput.classList.add('game-lost');
-        
-        // Disable search
         searchInput.disabled = true;
+        
+        // Delay loss message until all attribute cards have flipped
+        const revealDelay = getTotalRevealDuration();
+        setTimeout(() => {
+            document.getElementById('target-card-image').src = targetCard.image;
+            document.getElementById('target-card-name').textContent = targetCard.name;
+            lossMessage.classList.remove('hidden');
+        }, revealDelay);
     }
 
     /**
