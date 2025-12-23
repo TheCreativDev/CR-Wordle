@@ -1,0 +1,69 @@
+/* Lucky Spin Styles */
+
+.wheel-stage {
+    position: relative;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.wheel {
+    position: relative;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    border: 2px solid var(--glass-border);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+    overflow: hidden;
+    transition: transform 2.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.wheel-pointer {
+    position: absolute;
+    top: 50%; left: calc(50% - 4px);
+    transform: translate(-50%, -120px);
+    width: 0; height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 16px solid var(--gold);
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+    z-index: 2;
+}
+
+.wedge-label {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform-origin: 0 0;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+
+.wheel-center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #6366f1, #4361ee);
+    border: 2px solid rgba(255,255,255,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 800;
+    letter-spacing: 1px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .wheel-stage { height: 260px; }
+    .wheel { width: 220px; height: 220px; }
+    .wheel-center { width: 70px; height: 70px; }
+    .wedge-label { font-size: 0.72rem; }
+}

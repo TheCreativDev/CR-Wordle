@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Draw - CR Wordle Casino</title>
+    <link rel="stylesheet" href="../../css/casino-base.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Top Bar -->
+    <header class="top-bar">
+        <a href="../../casino.html" class="back-btn" title="Back to Casino">
+            <span>←</span>
+        </a>
+        <div class="score-container">
+            <span class="score-label">YOUR SCORE</span>
+            <span id="score-value" class="score-value">0</span>
+        </div>
+        <div class="top-bar-spacer"></div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="game-main">
+        <div class="game-header">
+            <div class="game-icon">🃏</div>
+            <h1 class="game-title">CARD DRAW</h1>
+            <p class="game-description">
+                Draw a card higher than the dealer to win! Ace is highest (14). 
+                If you draw higher by 5+ ranks, win <strong>3x</strong>. 
+                By 2-4 ranks, win <strong>2x</strong>. By 1 rank, win <strong>1.5x</strong>. Ties push.
+            </p>
+        </div>
+
+        <div class="game-card-container">
+            <!-- Bet Section -->
+            <div class="bet-section">
+                <label class="bet-label">Your Bet</label>
+                <div class="bet-input-group">
+                    <button class="bet-adjust" data-adjust="-10">-10</button>
+                    <button class="bet-adjust" data-adjust="-1">-1</button>
+                    <input type="number" id="bet-input" class="bet-input" value="10" min="1">
+                    <button class="bet-adjust" data-adjust="+1">+1</button>
+                    <button class="bet-adjust" data-adjust="+10">+10</button>
+                </div>
+                <button class="bet-max" id="bet-max">MAX</button>
+            </div>
+
+            <!-- Cards Display -->
+            <div class="cards-display">
+                <div class="card-slot dealer-slot">
+                    <span class="card-slot-label">Dealer</span>
+                    <div class="playing-card" id="dealer-card">?</div>
+                </div>
+                <div class="vs-indicator">VS</div>
+                <div class="card-slot player-slot">
+                    <span class="card-slot-label">You</span>
+                    <div class="playing-card" id="player-card">?</div>
+                </div>
+            </div>
+
+            <button class="primary-btn" id="draw-btn">Draw Cards</button>
+
+            <!-- Result -->
+            <div class="game-result hidden" id="game-result">
+                <span class="result-text"></span>
+                <span class="result-amount"></span>
+            </div>
+
+            <button class="play-again-btn hidden" id="play-again-btn">Draw Again</button>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="../../js/firebase-config.js"></script>
+    <script src="../../js/firebase-analytics.js"></script>
+    <script src="../../js/animations.js"></script>
+    
+    <!-- Shared Casino Module -->
+    <script src="../../js/casino-shared.js"></script>
+    
+    <!-- Game Logic -->
+    <script src="game.js"></script>
+</body>
+</html>

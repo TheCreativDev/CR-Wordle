@@ -114,11 +114,150 @@ const FirebaseAnalytics = (function() {
             .then((snapshot) => snapshot.val() || {});
     }
 
+    /**
+     * Get the user's global score from Firebase
+     * @returns {Promise<number>} - Promise that resolves with the global score
+     */
+    function getGlobalScore() {
+        if (typeof firebase === 'undefined' || !firebase.database) {
+            return Promise.reject('Firebase not initialized');
+        }
+
+        const user = auth.currentUser;
+        if (!user) {
+            return Promise.reject('User not authenticated');
+        }
+
+        return database.ref('users/' + user.uid + '/globalScore')
+            .once('value')
+            .then((snapshot) => {
+                const score = snapshot.val();
+                return typeof score === 'number' ? score : null;
+            });
+    }
+
+    /**
+     * Set the user's global score in Firebase
+     * @param {number} score - The new global score
+     * @returns {Promise} - Promise that resolves when score is saved
+     */
+    function setGlobalScore(score) {
+        if (typeof firebase === 'undefined' || !firebase.database) {
+            return Promise.reject('Firebase not initialized');
+        }
+
+        const user = auth.currentUser;
+        if (!user) {
+            return Promise.reject('User not authenticated');
+        }
+
+        const safeScore = Number.isFinite(score) ? Number(score.toFixed(2)) : 0;
+        return database.ref('users/' + user.uid + '/globalScore').set(safeScore);
+    }
+
+    /**
+     * Add to the user's global score (atomic increment)
+     * @param {number} amount - The amount to add (can be negative)
+     * @returns {Promise<number>} - Promise that resolves with the new score
+     */
+    function addToGlobalScore(amount) {
+        if (typeof firebase === 'undefined' || !firebase.database) {
+            return Promise.reject('Firebase not initialized');
+        }
+
+        const user = auth.currentUser;
+        if (!user) {
+            return Promise.reject('User not authenticated');
+        }
+
+        const scoreRef = database.ref('users/' + user.uid + '/globalScore');
+        return scoreRef.transaction((currentScore) => {
+            const current = typeof currentScore === 'number' ? currentScore : 0;
+            const newScore = Number((current + amount).toFixed(2));
+            return Math.max(0, newScore); // Ensure score never goes negative
+        }).then((result) => {
+            return result.snapshot.val();
+        });
+    }
+
+    /**
+     * Initialize global score from existing game logs if not already set
+     * This is for migrating existing users who don't have a globalScore yet
+     * @returns {Promise<number>} - Promise that resolves with the global score
+     */
+    function initializeGlobalScoreIfNeeded() {
+        if (typeof firebase === 'undefined' || !firebase.database) {
+            return Promise.reject('Firebase not initialized');
+        }
+
+        const user = auth.currentUser;
+        if (!user) {
+            return Promise.reject('User not authenticated');
+        }
+
+        return getGlobalScore().then((existingScore) => {
+            // If score already exists, return it
+            if (existingScore !== null) {
+                return existingScore;
+            }
+
+            // Calculate score from existing game logs
+            return fetchAllGames().then((games) => {
+                const wonGames = games.filter(g => g.won);
+                const totalScore = wonGames.reduce((sum, g) => {
+                    const score = Number(g.score);
+                    return sum + (Number.isFinite(score) ? score : 0);
+                }, 0);
+
+                const safeScore = Number(totalScore.toFixed(2));
+                return setGlobalScore(safeScore).then(() => safeScore);
+            }).catch(() => {
+                // If fetching games fails, initialize to 0
+                return setGlobalScore(0).then(() => 0);
+            });
+        });
+    }
+
+    /**
+     * Promise that resolves when Firebase auth is ready
+     * @returns {Promise} - Promise that resolves when user is authenticated
+     */
+    function ready() {
+        if (typeof firebase === 'undefined' || !auth) {
+            return Promise.reject('Firebase not initialized');
+        }
+
+        // If already authenticated, resolve immediately
+        if (auth.currentUser) {
+            return Promise.resolve(auth.currentUser);
+        }
+
+        // Wait for auth state change
+        return new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => {
+                reject('Authentication timeout');
+            }, 10000);
+
+            const unsubscribe = auth.onAuthStateChanged((user) => {
+                if (user) {
+                    clearTimeout(timeout);
+                    unsubscribe();
+                    resolve(user);
+                }
+            });
+        });
+    }
+
     // Public API
     return {
         logGame,
         logGameStart,
         fetchAllGames,
-        fetchStats
+        fetchStats,
+        getGlobalScore,
+        setGlobalScore,
+        addToGlobalScore,
+        initializeGlobalScoreIfNeeded,
+        ready
     };
 })();

@@ -96,26 +96,25 @@
                         <span id="stat-best" class="stat-value">-</span>
                         <span class="stat-label">Best Game</span>
                     </div>
-                    <div class="stat-item">
-                        <span id="stat-total-score" class="stat-value">0</span>
-                        <span class="stat-label">Total Score</span>
-                    </div>
-                    <div class="stat-item">
-                        <span id="stat-best-score" class="stat-value">-</span>
-                        <span class="stat-label">Best Score</span>
-                    </div>
                 </div>
-                <h3 class="global-stats-title">Global Statistics</h3>
-                <div class="stats-grid global-stats">
-                    <div class="stat-item">
-                        <span id="stat-global-games" class="stat-value">0</span>
-                        <span class="stat-label">Games Started</span>
+                
+                <!-- Score + Casino Section -->
+                <div class="casino-section">
+                    <div class="score-display">
+                        <span class="score-label">Your Score</span>
+                        <span id="stat-score" class="score-value">0</span>
                     </div>
+                    <a href="casino.html" class="casino-btn">
+                        <span class="casino-btn-icon">🎰</span>
+                        <span class="casino-btn-text">Play with your Score</span>
+                    </a>
                 </div>
-                <a href="casino.html" class="casino-btn">
-                    <span class="casino-btn-icon">🎰</span>
-                    <span class="casino-btn-text">Play with your Score</span>
-                </a>
+                
+                <!-- Global Stats -->
+                <div class="global-stats-section">
+                    <span class="global-stats-label">Games Started Globally</span>
+                    <span id="stat-global-games" class="global-stats-value">0</span>
+                </div>
             </div>
         </div>
     </div>
@@ -127,6 +126,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="js/firebase-config.js"></script>
     <script src="js/firebase-analytics.js"></script>
+    <script src="js/animations.js"></script>
     
     <!-- Game Scripts -->
     <script src="data/cards.js"></script>

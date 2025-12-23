@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystery Box - CR Wordle Casino</title>
+    <link rel="stylesheet" href="../../css/casino-base.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Top Bar -->
+    <header class="top-bar">
+        <a href="../../casino.html" class="back-btn" title="Back to Casino">
+            <span>←</span>
+        </a>
+        <div class="score-container">
+            <span class="score-label">YOUR SCORE</span>
+            <span id="score-value" class="score-value">0</span>
+        </div>
+        <div class="top-bar-spacer"></div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="game-main">
+        <div class="game-header">
+            <div class="game-icon">📦</div>
+            <h1 class="game-title">MYSTERY BOX</h1>
+            <p class="game-description">
+                Choose a box and reveal its treasure! Each box has different risk and reward — from safe picks to legendary jackpots.
+            </p>
+        </div>
+
+        <div class="game-card-container">
+            <!-- Bet Section -->
+            <div class="bet-section">
+                <label class="bet-label">Your Bet</label>
+                <div class="bet-input-group">
+                    <button class="bet-adjust" data-adjust="-10">-10</button>
+                    <button class="bet-adjust" data-adjust="-1">-1</button>
+                    <input type="number" id="bet-input" class="bet-input" value="10" min="1">
+                    <button class="bet-adjust" data-adjust="+1">+1</button>
+                    <button class="bet-adjust" data-adjust="+10">+10</button>
+                </div>
+                <button class="bet-max" id="bet-max">MAX</button>
+            </div>
+
+            <!-- Boxes -->
+            <div class="box-grid">
+                <button class="mystery-box" data-box="wooden">
+                    <div class="box-body">
+                        <div class="box-lid"></div>
+                        <div class="box-glow"></div>
+                        <span class="box-emoji">🪵</span>
+                    </div>
+                    <div class="box-label">
+                        Wooden Box
+                        <span class="box-odds">0.5x–2x • safer</span>
+                    </div>
+                </button>
+                <button class="mystery-box" data-box="golden">
+                    <div class="box-body">
+                        <div class="box-lid"></div>
+                        <div class="box-glow"></div>
+                        <span class="box-emoji">🟨</span>
+                    </div>
+                    <div class="box-label">
+                        Golden Box
+                        <span class="box-odds">0x–6x • medium</span>
+                    </div>
+                </button>
+                <button class="mystery-box" data-box="legendary">
+                    <div class="box-body">
+                        <div class="box-lid"></div>
+                        <div class="box-glow"></div>
+                        <span class="box-emoji">🌟</span>
+                    </div>
+                    <div class="box-label">
+                        Legendary Box
+                        <span class="box-odds">0x–10x • risky</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Result -->
+            <div class="game-result hidden" id="game-result">
+                <span class="result-text"></span>
+                <span class="result-amount"></span>
+            </div>
+
+            <button class="play-again-btn hidden" id="play-again-btn">Open Another</button>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="../../js/firebase-config.js"></script>
+    <script src="../../js/firebase-analytics.js"></script>
+    <script src="../../js/animations.js"></script>
+    
+    <!-- Shared Casino Module -->
+    <script src="../../js/casino-shared.js"></script>
+    
+    <!-- Game Logic -->
+    <script src="game.js"></script>
+</body>
+</html>

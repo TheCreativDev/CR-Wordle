@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Roll - CR Wordle Casino</title>
+    <link rel="stylesheet" href="../../css/casino-base.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Top Bar -->
+    <header class="top-bar">
+        <a href="../../casino.html" class="back-btn" title="Back to Casino">
+            <span>←</span>
+        </a>
+        <div class="score-container">
+            <span class="score-label">YOUR SCORE</span>
+            <span id="score-value" class="score-value">0</span>
+        </div>
+        <div class="top-bar-spacer"></div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="game-main">
+        <div class="game-header">
+            <div class="game-icon">🎲</div>
+            <h1 class="game-title">DICE ROLL</h1>
+            <p class="game-description">
+                Two dice will be rolled. Predict if the total will be <strong>higher than 7</strong>, 
+                <strong>exactly 7</strong>, or <strong>lower than 7</strong>. The riskier the bet, the bigger the reward!
+            </p>
+        </div>
+
+        <div class="game-card-container">
+            <!-- Bet Section -->
+            <div class="bet-section">
+                <label class="bet-label">Your Bet</label>
+                <div class="bet-input-group">
+                    <button class="bet-adjust" data-adjust="-10">-10</button>
+                    <button class="bet-adjust" data-adjust="-1">-1</button>
+                    <input type="number" id="bet-input" class="bet-input" value="10" min="1">
+                    <button class="bet-adjust" data-adjust="+1">+1</button>
+                    <button class="bet-adjust" data-adjust="+10">+10</button>
+                </div>
+                <button class="bet-max" id="bet-max">MAX</button>
+            </div>
+
+            <!-- Dice Choices -->
+            <div class="dice-choices">
+                <button class="dice-choice" data-choice="low">
+                    <span class="choice-label">Lower</span>
+                    <span class="choice-range">2-6</span>
+                    <span class="choice-multiplier">2x</span>
+                </button>
+                <button class="dice-choice lucky" data-choice="seven">
+                    <span class="choice-label">Lucky 7</span>
+                    <span class="choice-range">= 7</span>
+                    <span class="choice-multiplier">6x</span>
+                </button>
+                <button class="dice-choice" data-choice="high">
+                    <span class="choice-label">Higher</span>
+                    <span class="choice-range">8-12</span>
+                    <span class="choice-multiplier">2x</span>
+                </button>
+            </div>
+
+            <!-- Dice Display -->
+            <div class="dice-display hidden" id="dice-display">
+                <div class="dice" id="dice1">⚀</div>
+                <div class="dice" id="dice2">⚀</div>
+            </div>
+
+            <!-- Result -->
+            <div class="game-result hidden" id="game-result">
+                <span class="result-text"></span>
+                <span class="result-amount"></span>
+            </div>
+
+            <button class="play-again-btn hidden" id="play-again-btn">Roll Again</button>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="../../js/firebase-config.js"></script>
+    <script src="../../js/firebase-analytics.js"></script>
+    <script src="../../js/animations.js"></script>
+    
+    <!-- Shared Casino Module -->
+    <script src="../../js/casino-shared.js"></script>
+    
+    <!-- Game Logic -->
+    <script src="game.js"></script>
+</body>
+</html>

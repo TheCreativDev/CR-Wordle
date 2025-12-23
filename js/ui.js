@@ -494,6 +494,15 @@ const UI = (function() {
                 targetCard: gameState.targetCard.name,
                 guessedCards: gameState.guessedCards.map(c => c.name)
             });
+            
+            // Update global score for casino
+            FirebaseAnalytics.addToGlobalScore(scoreResult.score)
+                .then((newScore) => {
+                    console.log('Global score updated:', newScore);
+                })
+                .catch((error) => {
+                    console.error('Error updating global score:', error);
+                });
         }
         
         // Disable search immediately
@@ -507,6 +516,9 @@ const UI = (function() {
                 scorePointsSpan.textContent = formatScoreForDisplay(scoreResult.score);
             }
             winMessage.classList.remove('hidden');
+            if (typeof Animations !== 'undefined' && Animations.confetti) {
+                Animations.confetti({ count: 160, spread: 80, power: 140 });
+            }
         }, revealDelay);
     }
 
@@ -544,6 +556,9 @@ const UI = (function() {
             document.getElementById('target-card-image').src = targetCard.image;
             document.getElementById('target-card-name').textContent = targetCard.name;
             lossMessage.classList.remove('hidden');
+            if (typeof Animations !== 'undefined' && Animations.lossBurst) {
+                Animations.lossBurst({ particlesCount: 70, shake: true, flash: false });
+            }
         }, revealDelay);
     }
 
@@ -603,8 +618,7 @@ const UI = (function() {
         document.getElementById('stat-winrate').textContent = '...';
         document.getElementById('stat-average').textContent = '...';
         document.getElementById('stat-best').textContent = '...';
-        document.getElementById('stat-total-score').textContent = '...';
-        document.getElementById('stat-best-score').textContent = '...';
+        document.getElementById('stat-score').textContent = '...';
         document.getElementById('stat-global-games').textContent = '...';
         
         Stats.getStats().then((stats) => {
@@ -614,8 +628,7 @@ const UI = (function() {
             document.getElementById('stat-winrate').textContent = stats.winRate + '%';
             document.getElementById('stat-average').textContent = stats.averageGuesses;
             document.getElementById('stat-best').textContent = stats.bestGame || '-';
-            document.getElementById('stat-total-score').textContent = formatScoreForDisplay(stats.totalScore || 0);
-            document.getElementById('stat-best-score').textContent = Number.isFinite(stats.bestScore) ? formatScoreForDisplay(stats.bestScore) : '-';
+            document.getElementById('stat-score').textContent = formatScoreForDisplay(stats.globalScore || 0);
             document.getElementById('stat-global-games').textContent = stats.globalGamesStarted;
         }).catch((error) => {
             console.error('Error loading stats:', error);
@@ -625,8 +638,7 @@ const UI = (function() {
             document.getElementById('stat-winrate').textContent = '-';
             document.getElementById('stat-average').textContent = '-';
             document.getElementById('stat-best').textContent = '-';
-            document.getElementById('stat-total-score').textContent = '-';
-            document.getElementById('stat-best-score').textContent = '-';
+            document.getElementById('stat-score').textContent = '-';
             document.getElementById('stat-global-games').textContent = '-';
         });
     }

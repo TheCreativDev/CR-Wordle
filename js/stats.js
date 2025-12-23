@@ -1,7 +1,8 @@
 /**
  * Stats Module
  * Handles Firebase persistence for game statistics
- * Calculates stats from individual game records stored in Firebase
+ * Calculates game stats from individual game records stored in Firebase
+ * Uses global score from users/{uid}/globalScore for current balance
  */
 
 const Stats = (function() {
@@ -41,26 +42,11 @@ const Stats = (function() {
         
         // Total guesses for won games
         const totalGuesses = wonGames.reduce((sum, g) => sum + (g.guesses || 0), 0);
-
-        // Total score for won games
-        const totalScore = wonGames.reduce((sum, g) => {
-            const score = Number(g.score);
-            return sum + (Number.isFinite(score) ? score : 0);
-        }, 0);
         
         // Best game (lowest guesses to win)
         let bestGame = null;
         if (wonGames.length > 0) {
             bestGame = Math.min(...wonGames.map(g => g.guesses));
-        }
-
-        // Best score (highest score)
-        let bestScore = null;
-        if (wonGames.length > 0) {
-            bestScore = Math.max(...wonGames.map(g => {
-                const score = Number(g.score);
-                return Number.isFinite(score) ? score : 0;
-            }));
         }
         
         return {
@@ -68,9 +54,7 @@ const Stats = (function() {
             gamesWon: gamesWon,
             gamesLost: gamesLost,
             totalGuesses: totalGuesses,
-            bestGame: bestGame,
-            totalScore: Number(totalScore.toFixed(2)),
-            bestScore: bestScore
+            bestGame: bestGame
         };
     }
 
@@ -83,9 +67,7 @@ const Stats = (function() {
             gamesWon: 0,
             gamesLost: 0,
             totalGuesses: 0,
-            bestGame: null,
-            totalScore: 0,
-            bestScore: null
+            bestGame: null
         };
     }
 
@@ -137,13 +119,19 @@ const Stats = (function() {
      * @returns {Promise} - Resolves with formatted stats
      */
     function getStats() {
-        return Promise.all([loadStatsFromGames(), loadGlobalStats()])
-            .then(([userStats, globalStats]) => {
+        const statsPromise = Promise.all([loadStatsFromGames(), loadGlobalStats()]);
+        
+        // Fetch current global balance
+        const globalScorePromise = (typeof FirebaseAnalytics !== 'undefined' && FirebaseAnalytics.getGlobalScore)
+            ? FirebaseAnalytics.getGlobalScore().catch(() => null)
+            : Promise.resolve(null);
+        
+        return Promise.all([statsPromise, globalScorePromise])
+            .then(([[userStats, globalStats], globalScore]) => {
                 const gamesStarted = userStats.gamesStarted || 0;
                 const gamesWon = userStats.gamesWon || 0;
                 const gamesLost = userStats.gamesLost || 0;
                 const totalGuesses = userStats.totalGuesses || 0;
-                const totalScore = userStats.totalScore || 0;
                 
                 // Calculate win rate based on completed games
                 const completedGames = gamesWon + gamesLost;
@@ -155,11 +143,6 @@ const Stats = (function() {
                 const averageGuesses = gamesWon > 0 
                     ? (totalGuesses / gamesWon).toFixed(1)
                     : 0;
-
-                // Calculate average score (only for won games)
-                const averageScore = gamesWon > 0
-                    ? Number((totalScore / gamesWon).toFixed(2))
-                    : 0;
                 
                 return {
                     gamesStarted: gamesStarted,
@@ -168,9 +151,8 @@ const Stats = (function() {
                     winRate: winRate,
                     averageGuesses: averageGuesses,
                     bestGame: userStats.bestGame,
-                    totalScore: Number(totalScore.toFixed(2)),
-                    averageScore: averageScore,
-                    bestScore: userStats.bestScore,
+                    // globalScore = current balance (Wordle earnings + casino wins/losses)
+                    globalScore: typeof globalScore === 'number' ? globalScore : 0,
                     globalGamesStarted: globalStats.gamesStarted || 0
                 };
             });

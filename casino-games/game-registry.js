@@ -1,19 +1,21 @@
 /**
  * Casino Game Registry
- * Central system for registering and managing casino games
+ * Central system for registering casino games
+ * Games register via manifest.js in their folders
  */
 
 const CasinoGameRegistry = (function() {
     'use strict';
 
     const games = new Map();
+    const gameOrder = [];
 
     /**
      * Register a game with the registry
-     * @param {string} id - Unique game identifier
-     * @param {object} config - Game configuration
+     * @param {string} id - Unique game identifier (folder name)
+     * @param {object} manifest - Game manifest data
      */
-    function register(id, config) {
+    function register(id, manifest) {
         if (games.has(id)) {
             console.warn(`Game "${id}" is already registered. Skipping.`);
             return;
@@ -21,26 +23,25 @@ const CasinoGameRegistry = (function() {
 
         const gameConfig = {
             id: id,
-            name: config.name || 'Unknown Game',
-            description: config.description || '',
-            icon: config.icon || '🎮',
-            odds: config.odds || 'N/A',
-            enabled: config.enabled !== false,
-            init: config.init || null,
-            reset: config.reset || null,
-            getModalHTML: config.getModalHTML || null
+            name: manifest.name || 'Unknown Game',
+            description: manifest.description || '',
+            icon: manifest.icon || '🎮',
+            odds: manifest.odds || 'N/A',
+            enabled: manifest.enabled !== false,
+            path: `casino-games/${id}/`
         };
 
         games.set(id, gameConfig);
+        gameOrder.push(id);
         console.log(`Game "${id}" registered successfully.`);
     }
 
     /**
-     * Get all registered games
+     * Get all registered games in order
      * @returns {Array} Array of game configs
      */
     function getAllGames() {
-        return Array.from(games.values());
+        return gameOrder.map(id => games.get(id));
     }
 
     /**
@@ -57,7 +58,7 @@ const CasinoGameRegistry = (function() {
      * @returns {Array} Array of enabled game configs
      */
     function getEnabledGames() {
-        return Array.from(games.values()).filter(g => g.enabled);
+        return getAllGames().filter(g => g.enabled);
     }
 
     /**
@@ -65,42 +66,7 @@ const CasinoGameRegistry = (function() {
      * @returns {Array} Array of disabled game configs
      */
     function getPlaceholderGames() {
-        return Array.from(games.values()).filter(g => !g.enabled);
-    }
-
-    /**
-     * Initialize a specific game
-     * @param {string} id - Game identifier
-     * @param {object} context - Shared context (score functions, etc.)
-     */
-    function initGame(id, context) {
-        const game = games.get(id);
-        if (game && game.init && typeof game.init === 'function') {
-            game.init(context);
-        }
-    }
-
-    /**
-     * Initialize all enabled games
-     * @param {object} context - Shared context
-     */
-    function initAllGames(context) {
-        games.forEach((game, id) => {
-            if (game.enabled && game.init) {
-                game.init(context);
-            }
-        });
-    }
-
-    /**
-     * Reset a specific game state
-     * @param {string} id - Game identifier
-     */
-    function resetGame(id) {
-        const game = games.get(id);
-        if (game && game.reset && typeof game.reset === 'function') {
-            game.reset();
-        }
+        return getAllGames().filter(g => !g.enabled);
     }
 
     /**
@@ -111,16 +77,17 @@ const CasinoGameRegistry = (function() {
     function generateGameCardHTML(game) {
         const buttonText = game.enabled ? 'Play Now' : 'Coming Soon';
         const buttonDisabled = game.enabled ? '' : 'disabled';
-        const dataAttr = game.enabled ? `data-game="${game.id}"` : '';
+        const href = game.enabled ? `${game.path}index.html` : '#';
+        const onClick = game.enabled ? '' : 'onclick="return false;"';
 
         return `
-            <div class="game-card" ${dataAttr}>
+            <div class="game-card">
                 <div class="game-card-inner">
                     <div class="game-icon">${game.icon}</div>
                     <h3 class="game-title">${game.name}</h3>
                     <p class="game-description">${game.description}</p>
                     <div class="game-odds">${game.odds}</div>
-                    <button class="game-play-btn" ${dataAttr} ${buttonDisabled}>${buttonText}</button>
+                    <a href="${href}" class="game-play-btn" ${buttonDisabled} ${onClick}>${buttonText}</a>
                 </div>
             </div>
         `;
@@ -131,21 +98,7 @@ const CasinoGameRegistry = (function() {
      * @returns {string} HTML string for all games
      */
     function generateAllGameCardsHTML() {
-        const allGames = getAllGames();
-        return allGames.map(game => generateGameCardHTML(game)).join('\n');
-    }
-
-    /**
-     * Generate modal content HTML for a game
-     * @param {string} id - Game identifier
-     * @returns {string} HTML string or empty
-     */
-    function generateGameModalHTML(id) {
-        const game = games.get(id);
-        if (game && game.getModalHTML && typeof game.getModalHTML === 'function') {
-            return game.getModalHTML();
-        }
-        return '';
+        return getAllGames().map(game => generateGameCardHTML(game)).join('\n');
     }
 
     // Public API
@@ -155,11 +108,7 @@ const CasinoGameRegistry = (function() {
         getGame,
         getEnabledGames,
         getPlaceholderGames,
-        initGame,
-        initAllGames,
-        resetGame,
         generateGameCardHTML,
-        generateAllGameCardsHTML,
-        generateGameModalHTML
+        generateAllGameCardsHTML
     };
 })();

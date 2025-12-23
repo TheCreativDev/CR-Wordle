@@ -9,97 +9,42 @@
     const CARD_VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
     const CARD_SUITS = ['♠', '♥', '♦', '♣'];
 
-    // Game configuration
-    const config = {
-        name: 'Card Draw',
-        description: "Draw a card and beat the dealer's hand.",
-        icon: '🃏',
-        odds: 'Up to 3x',
-        enabled: true
-    };
-
-    // Shared context (set during init)
-    let ctx = null;
-
-    /**
-     * Get the modal HTML for this game
-     */
-    function getModalHTML() {
-        return `
-            <div id="cards-game" class="game-container hidden">
-                <h2 class="game-modal-title">🃏 Card Draw</h2>
-                <p class="game-modal-description">
-                    Draw a card higher than the dealer to win! Ace is highest (14). 
-                    If you draw higher by 5+ ranks, win <strong>3x</strong>. 
-                    By 2-4 ranks, win <strong>2x</strong>. By 1 rank, win <strong>1.5x</strong>. Ties push.
-                </p>
-                
-                <div class="bet-section">
-                    <label class="bet-label">Your Bet</label>
-                    <div class="bet-input-group">
-                        <button class="bet-adjust" data-adjust="-10">-10</button>
-                        <button class="bet-adjust" data-adjust="-1">-1</button>
-                        <input type="number" id="cards-bet" class="bet-input" value="10" min="1">
-                        <button class="bet-adjust" data-adjust="+1">+1</button>
-                        <button class="bet-adjust" data-adjust="+10">+10</button>
-                    </div>
-                    <button class="bet-max" id="cards-bet-max">MAX</button>
-                </div>
-
-                <div class="cards-display">
-                    <div class="card-slot dealer-slot">
-                        <span class="card-slot-label">Dealer</span>
-                        <div class="playing-card" id="dealer-card">?</div>
-                    </div>
-                    <div class="vs-indicator">VS</div>
-                    <div class="card-slot player-slot">
-                        <span class="card-slot-label">You</span>
-                        <div class="playing-card" id="player-card">?</div>
-                    </div>
-                </div>
-
-                <button class="draw-btn" id="draw-cards-btn">Draw Cards</button>
-
-                <div class="game-result hidden" id="cards-result">
-                    <span class="result-text"></span>
-                    <span class="result-amount"></span>
-                </div>
-
-                <button class="play-again-btn hidden" id="cards-play-again">Draw Again</button>
-            </div>
-        `;
-    }
+    // DOM Elements (assigned in init)
+    let betInput, betMaxBtn, drawBtn, playAgainBtn;
+    let dealerCardEl, playerCardEl, resultEl;
 
     /**
      * Initialize the game
      */
-    function init(context) {
-        ctx = context;
+    function init() {
+        // Get DOM elements
+        betInput = document.getElementById('bet-input');
+        betMaxBtn = document.getElementById('bet-max');
+        drawBtn = document.getElementById('draw-btn');
+        playAgainBtn = document.getElementById('play-again-btn');
+        dealerCardEl = document.getElementById('dealer-card');
+        playerCardEl = document.getElementById('player-card');
+        resultEl = document.getElementById('game-result');
 
-        const betInput = document.getElementById('cards-bet');
-        const betMaxBtn = document.getElementById('cards-bet-max');
-        const drawBtn = document.getElementById('draw-cards-btn');
-        const playAgainBtn = document.getElementById('cards-play-again');
-
-        if (!betInput) return; // Modal not rendered yet
+        if (!betInput) return; // Elements not found
 
         // Bet adjustments
-        document.querySelectorAll('#cards-game .bet-adjust').forEach(btn => {
+        document.querySelectorAll('.bet-adjust').forEach(btn => {
             btn.addEventListener('click', () => {
                 const adjust = parseInt(btn.dataset.adjust);
                 let newValue = Math.max(1, parseInt(betInput.value || 0) + adjust);
-                newValue = Math.min(newValue, Math.floor(ctx.getScore()));
+                newValue = Math.min(newValue, Math.floor(CasinoShared.getScore()));
                 betInput.value = newValue;
             });
         });
 
         betMaxBtn.addEventListener('click', () => {
-            betInput.value = Math.floor(ctx.getScore());
+            betInput.value = Math.floor(CasinoShared.getScore());
         });
 
         drawBtn.addEventListener('click', () => {
             const bet = parseInt(betInput.value);
-            if (bet > ctx.getScore() || bet < 1) {
+            if (bet > CasinoShared.getScore() || bet < 1) {
                 alert('Invalid bet amount!');
                 return;
             }
@@ -116,11 +61,6 @@
      * Draw cards and determine winner
      */
     function drawCards(bet) {
-        const dealerCardEl = document.getElementById('dealer-card');
-        const playerCardEl = document.getElementById('player-card');
-        const resultEl = document.getElementById('cards-result');
-        const playAgainBtn = document.getElementById('cards-play-again');
-
         // Draw random cards
         const dealerValue = Math.floor(Math.random() * 13);
         const playerValue = Math.floor(Math.random() * 13);
@@ -165,13 +105,19 @@
                     resultEl.classList.add('win');
                     resultText.textContent = `🎉 You Win! (${multiplier}x)`;
                     resultAmount.textContent = `+${winnings.toFixed(0)} points`;
-                    ctx.updateScore(ctx.getScore() + winnings - bet);
+                    CasinoShared.updateScore(CasinoShared.getScore() + winnings - bet);
+                    if (typeof Animations !== 'undefined' && Animations.winConfettiForMultiplier) {
+                        Animations.winConfettiForMultiplier(multiplier);
+                    }
                 } else if (diff < 0) {
                     // Player loses
                     resultEl.classList.add('lose');
                     resultText.textContent = '😢 Dealer Wins!';
                     resultAmount.textContent = `-${bet} points`;
-                    ctx.updateScore(ctx.getScore() - bet);
+                    CasinoShared.updateScore(CasinoShared.getScore() - bet);
+                    if (typeof Animations !== 'undefined' && Animations.bigLoss) {
+                        Animations.bigLoss(bet);
+                    }
                 } else {
                     // Push
                     resultEl.classList.add('push');
@@ -188,20 +134,19 @@
      * Reset game state
      */
     function reset() {
-        document.getElementById('dealer-card').textContent = '?';
-        document.getElementById('player-card').textContent = '?';
-        document.getElementById('dealer-card').className = 'playing-card';
-        document.getElementById('player-card').className = 'playing-card';
-        document.getElementById('cards-result').classList.add('hidden');
-        document.getElementById('cards-play-again').classList.add('hidden');
-        document.getElementById('draw-cards-btn').disabled = false;
+        dealerCardEl.textContent = '?';
+        playerCardEl.textContent = '?';
+        dealerCardEl.className = 'playing-card';
+        playerCardEl.className = 'playing-card';
+        resultEl.classList.add('hidden');
+        playAgainBtn.classList.add('hidden');
+        drawBtn.disabled = false;
     }
 
-    // Register with the game registry
-    CasinoGameRegistry.register('cards', {
-        ...config,
-        init: init,
-        reset: reset,
-        getModalHTML: getModalHTML
-    });
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 })();

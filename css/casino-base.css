@@ -1,4 +1,10 @@
-﻿/* ===== CSS Variables ===== */
+/**
+ * Casino Base CSS
+ * Shared styles for all casino game pages
+ * Each game page imports this for consistent layout
+ */
+
+/* ===== CSS Variables ===== */
 :root {
     --bg-primary: #1a1a2e;
     --bg-secondary: #16213e;
@@ -40,8 +46,8 @@ body {
     overflow-x: hidden;
 }
 
-/* ===== Score Bar (Top Fixed) ===== */
-.score-bar {
+/* ===== Top Bar (Score + Navigation) ===== */
+.top-bar {
     position: fixed;
     top: 0;
     left: 0;
@@ -114,22 +120,32 @@ body {
     filter: drop-shadow(0 0 8px rgba(243, 156, 18, 0.3));
 }
 
-.score-spacer {
+.top-bar-spacer {
     width: 44px;
 }
 
-/* ===== Main Content ===== */
-.casino-main {
+/* ===== Main Content Area ===== */
+.game-main {
     padding: 100px 24px 40px;
-    max-width: 1200px;
+    max-width: 600px;
     margin: 0 auto;
 }
 
-.main-title {
+.game-header {
     text-align: center;
+    margin-bottom: 32px;
+}
+
+.game-icon {
     font-size: 4rem;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+}
+
+.game-title {
+    font-size: 2.5rem;
     font-weight: 800;
-    letter-spacing: 4px;
+    letter-spacing: 2px;
     margin-bottom: 10px;
     background: linear-gradient(90deg, var(--gold), #ffe066, #fff8dc, #ffe066, var(--gold));
     background-size: 200% auto;
@@ -145,118 +161,191 @@ body {
     100% { background-position: 200% center; }
 }
 
-.main-subtitle {
-    text-align: center;
-    font-size: 1.1rem;
+.game-description {
+    font-size: 1rem;
     color: var(--text-secondary);
-    margin-bottom: 50px;
+    line-height: 1.6;
 }
 
-/* ===== Games Grid ===== */
-.games-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 24px;
+.game-description strong {
+    color: var(--text-primary);
 }
 
-/* ===== Game Card (Liquid Glass + Neumorphism) ===== */
-.game-card {
-    position: relative;
-    border-radius: 24px;
-    padding: 2px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
-    transition: all 0.4s ease;
-}
-
-.game-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 24px;
-    padding: 1px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent, rgba(255, 255, 255, 0.1));
-    -webkit-mask: 
-        linear-gradient(#fff 0 0) content-box, 
-        linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-}
-
-.game-card-inner {
+/* ===== Game Card Container ===== */
+.game-card-container {
     background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-radius: 22px;
-    padding: 28px;
-    height: 100%;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 32px;
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* ===== Bet Section ===== */
+.bet-section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
-    box-shadow:
-        8px 8px 24px var(--neumorphism-dark),
-        -4px -4px 16px var(--neumorphism-light),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-    transition: all 0.4s ease;
+    gap: 12px;
+    margin-bottom: 24px;
 }
 
-.game-card:hover {
-    transform: translateY(-8px);
+.bet-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.game-card:hover .game-card-inner {
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow:
-        12px 12px 32px var(--neumorphism-dark),
-        -6px -6px 20px var(--neumorphism-light),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+.bet-input-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.game-icon {
-    font-size: 3.5rem;
-    margin-bottom: 16px;
-    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+.bet-adjust {
+    width: 44px;
+    height: 44px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.game-title {
+.bet-adjust:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.bet-adjust:active {
+    transform: scale(0.95);
+}
+
+.bet-input {
+    width: 100px;
+    height: 50px;
     font-size: 1.4rem;
     font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 10px;
+    text-align: center;
+    color: var(--gold);
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--glass-border);
+    border-radius: 12px;
+    outline: none;
 }
 
-.game-description {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    line-height: 1.5;
-    margin-bottom: 16px;
-    flex-grow: 1;
+.bet-input:focus {
+    border-color: var(--gold);
 }
 
-.game-odds {
-    display: inline-block;
-    padding: 6px 16px;
-    margin-bottom: 20px;
+.bet-max {
+    padding: 8px 20px;
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--gold);
     background: rgba(243, 156, 18, 0.15);
-    border: 1px solid rgba(243, 156, 18, 0.3);
-    border-radius: 20px;
+    border: 1px solid rgba(243, 156, 18, 0.4);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.game-play-btn {
-    display: inline-block;
+.bet-max:hover {
+    background: rgba(243, 156, 18, 0.25);
+}
+
+/* ===== Game Results ===== */
+.game-result {
+    text-align: center;
+    padding: 16px;
+    margin-top: 20px;
+    border-radius: 12px;
+    animation: fadeIn 0.3s ease;
+}
+
+.game-result.hidden {
+    display: none;
+}
+
+.game-result.win {
+    background: rgba(46, 204, 113, 0.15);
+    border: 1px solid rgba(46, 204, 113, 0.4);
+}
+
+.game-result.lose {
+    background: rgba(231, 76, 60, 0.15);
+    border: 1px solid rgba(231, 76, 60, 0.4);
+}
+
+.game-result.push {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--glass-border);
+}
+
+.result-text {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.game-result.win .result-text {
+    color: var(--correct-green);
+}
+
+.game-result.lose .result-text {
+    color: var(--incorrect-red);
+}
+
+.game-result.push .result-text {
+    color: var(--text-secondary);
+}
+
+.result-amount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gold);
+}
+
+/* ===== Play Again Button ===== */
+.play-again-btn {
+    display: block;
     width: 100%;
-    padding: 14px 28px;
+    padding: 14px;
+    margin-top: 16px;
     font-size: 1rem;
     font-weight: 600;
     color: var(--text-primary);
-    text-decoration: none;
-    text-align: center;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.play-again-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.play-again-btn.hidden {
+    display: none;
+}
+
+/* ===== Primary Action Button ===== */
+.primary-btn {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
     background: linear-gradient(135deg, var(--accent-blue), #6366f1);
     border: none;
     border-radius: 14px;
@@ -267,20 +356,31 @@ body {
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-.game-play-btn:hover:not([disabled]) {
+.primary-btn:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow:
         0 6px 20px rgba(67, 97, 238, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
-.game-play-btn[disabled] {
-    background: linear-gradient(135deg, #4a4a6a, #3a3a5a);
-    color: var(--text-secondary);
+.primary-btn:disabled {
+    opacity: 0.5;
     cursor: not-allowed;
-    box-shadow:
-        0 2px 8px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.primary-btn.hidden {
+    display: none;
+}
+
+/* ===== Utility Classes ===== */
+.hidden {
+    display: none !important;
+}
+
+/* ===== Animations ===== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* ===== Scrollbar Styling ===== */
@@ -303,22 +403,16 @@ body {
 
 /* ===== Responsive Design ===== */
 @media (max-width: 768px) {
-    .main-title {
-        font-size: 2.5rem;
-        letter-spacing: 2px;
+    .game-title {
+        font-size: 2rem;
+        letter-spacing: 1px;
     }
 
-    .main-subtitle {
-        font-size: 1rem;
-        margin-bottom: 30px;
+    .game-description {
+        font-size: 0.9rem;
     }
 
-    .games-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-
-    .score-bar {
+    .top-bar {
         height: 60px;
         padding: 0 16px;
     }
@@ -327,22 +421,23 @@ body {
         font-size: 1.5rem;
     }
 
-    .casino-main {
+    .game-main {
         padding: 80px 16px 30px;
     }
 }
 
 @media (max-width: 480px) {
-    .main-title {
-        font-size: 2rem;
-    }
-
-    .game-card-inner {
-        padding: 22px;
+    .game-title {
+        font-size: 1.8rem;
     }
 
     .game-icon {
-        font-size: 2.8rem;
+        font-size: 3rem;
+    }
+
+    .game-card-container {
+        padding: 24px 16px;
+        border-radius: 20px;
     }
 
     .back-btn {
@@ -351,7 +446,17 @@ body {
         font-size: 1.2rem;
     }
 
-    .score-spacer {
+    .top-bar-spacer {
         width: 38px;
+    }
+
+    .bet-input-group {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .bet-adjust {
+        width: 40px;
+        height: 40px;
     }
 }

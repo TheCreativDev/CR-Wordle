@@ -1,0 +1,113 @@
+/**
+ * Dice Roll Game Styles
+ * Game-specific styles (base styles from casino-base.css)
+ */
+
+/* ===== Dice Choices ===== */
+.dice-choices {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.dice-choice {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 16px 12px;
+    background: var(--glass-bg);
+    border: 2px solid var(--glass-border);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dice-choice:hover:not(:disabled) {
+    background: rgba(67, 97, 238, 0.2);
+    border-color: var(--accent-blue);
+}
+
+.dice-choice.lucky {
+    border-color: rgba(243, 156, 18, 0.4);
+}
+
+.dice-choice.lucky:hover:not(:disabled) {
+    background: rgba(243, 156, 18, 0.15);
+    border-color: var(--gold);
+}
+
+.dice-choice.selected {
+    background: rgba(67, 97, 238, 0.3);
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 20px rgba(67, 97, 238, 0.3);
+}
+
+.dice-choice.lucky.selected {
+    background: rgba(243, 156, 18, 0.25);
+    border-color: var(--gold);
+    box-shadow: 0 0 20px rgba(243, 156, 18, 0.3);
+}
+
+.dice-choice:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.choice-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.choice-range {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.choice-multiplier {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--correct-green);
+}
+
+/* ===== Dice Display ===== */
+.dice-display {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.dice-display.hidden {
+    display: none;
+}
+
+.dice {
+    font-size: 4rem;
+    animation: none;
+}
+
+.dice.rolling {
+    animation: diceRoll 0.1s infinite;
+}
+
+@keyframes diceRoll {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(15deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(-15deg); }
+    100% { transform: rotate(0deg); }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 480px) {
+    .dice-choices {
+        flex-direction: column;
+    }
+
+    .dice {
+        font-size: 3rem;
+    }
+}

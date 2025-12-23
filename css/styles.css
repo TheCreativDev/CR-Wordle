@@ -542,6 +542,69 @@ body::before {
     background: var(--bg-darker);
 }
 
+/* ===== Casino Section (Score + Button) ===== */
+.casino-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, rgba(243, 156, 18, 0.15), rgba(241, 196, 15, 0.08));
+    border: 1px solid rgba(243, 156, 18, 0.3);
+    border-radius: 16px;
+    box-shadow: 
+        0 4px 24px rgba(243, 156, 18, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.score-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.score-label {
+    font-size: 0.85rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.score-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, var(--gold), #ffe066, var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 20px rgba(243, 156, 18, 0.4);
+}
+
+/* ===== Global Stats Section ===== */
+.global-stats-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    background: var(--bg-darker);
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.global-stats-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.global-stats-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
 /* ===== Casino Button ===== */
 .casino-btn {
     display: flex;
@@ -549,19 +612,18 @@ body::before {
     justify-content: center;
     gap: 10px;
     width: 100%;
-    padding: 16px 24px;
-    margin-bottom: 15px;
-    font-size: 1.1rem;
+    padding: 14px 24px;
+    font-size: 1.05rem;
     font-weight: 600;
     text-decoration: none;
     color: var(--text-primary);
-    background: linear-gradient(135deg, rgba(243, 156, 18, 0.3), rgba(241, 196, 15, 0.2));
-    border: 1px solid rgba(243, 156, 18, 0.4);
-    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(243, 156, 18, 0.4), rgba(241, 196, 15, 0.25));
+    border: 1px solid rgba(243, 156, 18, 0.5);
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 
-        0 4px 20px rgba(243, 156, 18, 0.2),
+        0 4px 16px rgba(243, 156, 18, 0.25),
         inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coin Flip - CR Wordle Casino</title>
+    <link rel="stylesheet" href="../../css/casino-base.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Top Bar -->
+    <header class="top-bar">
+        <a href="../../casino.html" class="back-btn" title="Back to Casino">
+            <span>←</span>
+        </a>
+        <div class="score-container">
+            <span class="score-label">YOUR SCORE</span>
+            <span id="score-value" class="score-value">0</span>
+        </div>
+        <div class="top-bar-spacer"></div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="game-main">
+        <div class="game-header">
+            <div class="game-icon">🪙</div>
+            <h1 class="game-title">COIN FLIP</h1>
+            <p class="game-description">
+                Pick <strong>Heads</strong> or <strong>Tails</strong>. Win <strong>2x</strong> on a correct call.
+                Ultra-rare <strong>Edge</strong> grants a dazzling <strong>10x</strong> jackpot!
+            </p>
+        </div>
+
+        <div class="game-card-container">
+            <!-- Bet Section -->
+            <div class="bet-section">
+                <label class="bet-label">Your Bet</label>
+                <div class="bet-input-group">
+                    <button class="bet-adjust" data-adjust="-10">-10</button>
+                    <button class="bet-adjust" data-adjust="-1">-1</button>
+                    <input type="number" id="bet-input" class="bet-input" value="10" min="1">
+                    <button class="bet-adjust" data-adjust="+1">+1</button>
+                    <button class="bet-adjust" data-adjust="+10">+10</button>
+                </div>
+                <button class="bet-max" id="bet-max">MAX</button>
+            </div>
+
+            <!-- Choice Buttons -->
+            <div class="coin-choices">
+                <button class="coin-choice" data-choice="heads">
+                    <span class="choice-label">Heads</span>
+                    <span class="choice-multiplier">2x</span>
+                </button>
+                <button class="coin-choice" data-choice="tails">
+                    <span class="choice-label">Tails</span>
+                    <span class="choice-multiplier">2x</span>
+                </button>
+            </div>
+
+            <!-- Coin Display -->
+            <div class="coin-stage">
+                <div class="coin" id="coin">
+                    <div class="coin-face coin-front">H</div>
+                    <div class="coin-face coin-back">T</div>
+                    <div class="coin-edge"></div>
+                </div>
+            </div>
+
+            <!-- Result -->
+            <div class="game-result hidden" id="game-result">
+                <span class="result-text"></span>
+                <span class="result-amount"></span>
+            </div>
+
+            <button class="play-again-btn hidden" id="play-again-btn">Flip Again</button>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="../../js/firebase-config.js"></script>
+    <script src="../../js/firebase-analytics.js"></script>
+    <script src="../../js/animations.js"></script>
+    
+    <!-- Shared Casino Module -->
+    <script src="../../js/casino-shared.js"></script>
+    
+    <!-- Game Logic -->
+    <script src="game.js"></script>
+</body>
+</html>

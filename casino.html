@@ -30,18 +30,6 @@
         </section>
     </main>
 
-    <!-- Game Modal Overlay -->
-    <div id="game-modal" class="game-modal hidden">
-        <div class="game-modal-content">
-            <button class="game-modal-close" id="close-game-modal">&times;</button>
-            
-            <!-- Game modals container - Populated dynamically from registry -->
-            <div id="game-modals-container">
-                <!-- Game modal content will be rendered here by JavaScript -->
-            </div>
-        </div>
-    </div>
-
     <!-- Scripts -->
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -49,17 +37,18 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="js/firebase-config.js"></script>
     <script src="js/firebase-analytics.js"></script>
+    <script src="js/animations.js"></script>
     
     <!-- Casino Game System -->
     <script src="casino-games/game-registry.js"></script>
     
-    <!-- Individual Games (order determines display order) -->
-    <script src="casino-games/coin-flip/game.js"></script>
-    <script src="casino-games/dice-roll/game.js"></script>
-    <script src="casino-games/card-draw/game.js"></script>
-    <script src="casino-games/lucky-spin/game.js"></script>
-    <script src="casino-games/crash/game.js"></script>
-    <script src="casino-games/mystery-box/game.js"></script>
+    <!-- Game Manifests (order determines display order) -->
+    <script src="casino-games/coin-flip/manifest.js"></script>
+    <script src="casino-games/dice-roll/manifest.js"></script>
+    <script src="casino-games/card-draw/manifest.js"></script>
+    <script src="casino-games/lucky-spin/manifest.js"></script>
+    <script src="casino-games/crash/manifest.js"></script>
+    <script src="casino-games/mystery-box/manifest.js"></script>
     
     <!-- Main Casino Controller -->
     <script src="js/casino.js"></script>

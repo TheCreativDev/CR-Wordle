@@ -8,107 +8,45 @@
 
     const DICE_FACES = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
 
-    // Game configuration
-    const config = {
-        name: 'Dice Roll',
-        description: 'Guess higher or lower. Beat the house!',
-        icon: '🎲',
-        odds: 'Up to 6x',
-        enabled: true
-    };
-
-    // Shared context (set during init)
-    let ctx = null;
-
-    /**
-     * Get the modal HTML for this game
-     */
-    function getModalHTML() {
-        return `
-            <div id="dice-game" class="game-container hidden">
-                <h2 class="game-modal-title">🎲 Dice Roll</h2>
-                <p class="game-modal-description">
-                    Two dice will be rolled. Predict if the total will be <strong>higher than 7</strong>, 
-                    <strong>exactly 7</strong>, or <strong>lower than 7</strong>. The riskier the bet, the bigger the reward!
-                </p>
-                
-                <div class="bet-section">
-                    <label class="bet-label">Your Bet</label>
-                    <div class="bet-input-group">
-                        <button class="bet-adjust" data-adjust="-10">-10</button>
-                        <button class="bet-adjust" data-adjust="-1">-1</button>
-                        <input type="number" id="dice-bet" class="bet-input" value="10" min="1">
-                        <button class="bet-adjust" data-adjust="+1">+1</button>
-                        <button class="bet-adjust" data-adjust="+10">+10</button>
-                    </div>
-                    <button class="bet-max" id="dice-bet-max">MAX</button>
-                </div>
-
-                <div class="dice-choices">
-                    <button class="dice-choice" data-choice="low">
-                        <span class="choice-label">Lower</span>
-                        <span class="choice-range">2-6</span>
-                        <span class="choice-multiplier">2x</span>
-                    </button>
-                    <button class="dice-choice lucky" data-choice="seven">
-                        <span class="choice-label">Lucky 7</span>
-                        <span class="choice-range">= 7</span>
-                        <span class="choice-multiplier">6x</span>
-                    </button>
-                    <button class="dice-choice" data-choice="high">
-                        <span class="choice-label">Higher</span>
-                        <span class="choice-range">8-12</span>
-                        <span class="choice-multiplier">2x</span>
-                    </button>
-                </div>
-
-                <div class="dice-display hidden" id="dice-display">
-                    <div class="dice" id="dice1">⚀</div>
-                    <div class="dice" id="dice2">⚀</div>
-                </div>
-
-                <div class="game-result hidden" id="dice-result">
-                    <span class="result-text"></span>
-                    <span class="result-amount"></span>
-                </div>
-
-                <button class="play-again-btn hidden" id="dice-play-again">Roll Again</button>
-            </div>
-        `;
-    }
+    // DOM Elements (assigned in init)
+    let betInput, betMaxBtn, diceChoices, playAgainBtn;
+    let dice1El, dice2El, displayEl, resultEl;
 
     /**
      * Initialize the game
      */
-    function init(context) {
-        ctx = context;
+    function init() {
+        // Get DOM elements
+        betInput = document.getElementById('bet-input');
+        betMaxBtn = document.getElementById('bet-max');
+        diceChoices = document.querySelectorAll('.dice-choice');
+        playAgainBtn = document.getElementById('play-again-btn');
+        dice1El = document.getElementById('dice1');
+        dice2El = document.getElementById('dice2');
+        displayEl = document.getElementById('dice-display');
+        resultEl = document.getElementById('game-result');
 
-        const betInput = document.getElementById('dice-bet');
-        const betMaxBtn = document.getElementById('dice-bet-max');
-        const diceChoices = document.querySelectorAll('.dice-choice');
-        const playAgainBtn = document.getElementById('dice-play-again');
-
-        if (!betInput) return; // Modal not rendered yet
+        if (!betInput) return; // Elements not found
 
         // Bet adjustments
-        document.querySelectorAll('#dice-game .bet-adjust').forEach(btn => {
+        document.querySelectorAll('.bet-adjust').forEach(btn => {
             btn.addEventListener('click', () => {
                 const adjust = parseInt(btn.dataset.adjust);
                 let newValue = Math.max(1, parseInt(betInput.value || 0) + adjust);
-                newValue = Math.min(newValue, Math.floor(ctx.getScore()));
+                newValue = Math.min(newValue, Math.floor(CasinoShared.getScore()));
                 betInput.value = newValue;
             });
         });
 
         betMaxBtn.addEventListener('click', () => {
-            betInput.value = Math.floor(ctx.getScore());
+            betInput.value = Math.floor(CasinoShared.getScore());
         });
 
         // Dice choice selection
         diceChoices.forEach(choice => {
             choice.addEventListener('click', () => {
                 const bet = parseInt(betInput.value);
-                if (bet > ctx.getScore() || bet < 1) {
+                if (bet > CasinoShared.getScore() || bet < 1) {
                     alert('Invalid bet amount!');
                     return;
                 }
@@ -132,12 +70,6 @@
      * Roll the dice
      */
     function rollDice(choice, bet) {
-        const dice1El = document.getElementById('dice1');
-        const dice2El = document.getElementById('dice2');
-        const displayEl = document.getElementById('dice-display');
-        const resultEl = document.getElementById('dice-result');
-        const playAgainBtn = document.getElementById('dice-play-again');
-
         displayEl.classList.remove('hidden');
         dice1El.classList.add('rolling');
         dice2El.classList.add('rolling');
@@ -187,12 +119,18 @@
                     resultEl.classList.add('win');
                     resultText.textContent = `🎉 You Win! Total: ${total}`;
                     resultAmount.textContent = `+${winnings.toFixed(0)} points`;
-                    ctx.updateScore(ctx.getScore() + winnings - bet);
+                    CasinoShared.updateScore(CasinoShared.getScore() + winnings - bet);
+                    if (typeof Animations !== 'undefined' && Animations.winConfettiForMultiplier) {
+                        Animations.winConfettiForMultiplier(multiplier);
+                    }
                 } else {
                     resultEl.classList.add('lose');
                     resultText.textContent = `😢 You Lose! Total: ${total}`;
                     resultAmount.textContent = `-${bet} points`;
-                    ctx.updateScore(ctx.getScore() - bet);
+                    CasinoShared.updateScore(CasinoShared.getScore() - bet);
+                    if (typeof Animations !== 'undefined' && Animations.bigLoss) {
+                        Animations.bigLoss(bet);
+                    }
                 }
 
                 playAgainBtn.classList.remove('hidden');
@@ -204,20 +142,19 @@
      * Reset game state
      */
     function reset() {
-        document.getElementById('dice-display').classList.add('hidden');
-        document.getElementById('dice-result').classList.add('hidden');
-        document.getElementById('dice-play-again').classList.add('hidden');
-        document.querySelectorAll('.dice-choice').forEach(el => {
+        displayEl.classList.add('hidden');
+        resultEl.classList.add('hidden');
+        playAgainBtn.classList.add('hidden');
+        diceChoices.forEach(el => {
             el.classList.remove('selected');
             el.disabled = false;
         });
     }
 
-    // Register with the game registry
-    CasinoGameRegistry.register('dice', {
-        ...config,
-        init: init,
-        reset: reset,
-        getModalHTML: getModalHTML
-    });
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 })();
